@@ -20,7 +20,8 @@ class MainActivity : AppCompatActivity() {
 
         arFragment = supportFragmentManager.findFragmentById(R.id.ux_fragment) as ArFragment?
 
-        board = Board(5, 5, 0.15f, this)
+        board = Board(6, 6, 0.15f, arrayOf(0, 1, 2, 6, 7, 21, 22, 32, 33, 33, 34),
+            arrayOf(13, 14, 15, 16, 18, 19, 20, 33, 34) ,this)
 
         arFragment!!.setOnTapArPlaneListener { hitResult: HitResult, plane: Plane, motionEvent: MotionEvent ->
             // Create the Anchor.
