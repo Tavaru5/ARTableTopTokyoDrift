@@ -10,7 +10,14 @@ import com.google.ar.sceneform.rendering.ShapeFactory
 import com.google.ar.sceneform.Node
 
 
-class Board (private val width: Int, private val height: Int, private val size: Float, context: Context) {
+class Board (
+    private val width: Int,
+    private val height: Int,
+    private val size: Float,
+    private val xWalls: Array<Int>,
+    private val yWalls: Array<Int>,
+    context: Context
+) {
     private var tileRenderable: ModelRenderable? = null
     private var xWall: ModelRenderable? = null
     private var yWall: ModelRenderable? = null
@@ -20,14 +27,15 @@ class Board (private val width: Int, private val height: Int, private val size: 
         MaterialFactory.makeOpaqueWithColor(context, com.google.ar.sceneform.rendering.Color(Color.BLACK))
             .thenAccept { material ->
                 tileRenderable = ShapeFactory.makeCube(Vector3(0.96f * size,0.01f,0.96f * size), Vector3(0f,0f,0f),material)
-                xWall = ShapeFactory.makeCube(Vector3(0.96f * size,size ,0.08f * size), Vector3(0f,0f,0f),material)
-                yWall = ShapeFactory.makeCube(Vector3(0.08f * size,size ,0.96f * size), Vector3(0f,0f,0f),material)
+                xWall = ShapeFactory.makeCube(Vector3(size, size , 0.08f * size), Vector3(0f,0f,0f),material)
+                yWall = ShapeFactory.makeCube(Vector3(0.08f * size, size , size), Vector3(0f,0f,0f),material)
 
             }
     }
 
     fun boardNode(): Node {
         val base = Node()
+        base.localPosition = Vector3(0f, 0.2f, 0f)
         for (index in 0 until height * width) {
             val tile = Node()
             val x = 0f - ((width * size - size) / 2) + (index.rem(width) * size)
@@ -36,11 +44,7 @@ class Board (private val width: Int, private val height: Int, private val size: 
             tile.renderable = tileRenderable
             tile.localPosition = Vector3(x, 0f, y)
         }
-        addWalls(base, arrayOf(0, 3, 8), arrayOf(0, 3, 8))
-        return base
-    }
 
-    fun addWalls(base: Node, xWalls: Array<Int>, yWalls: Array<Int>) {
         for (wallIndex in xWalls) {
             if (wallIndex < (height + 1) * width) {
                 val wall = Node()
@@ -62,5 +66,7 @@ class Board (private val width: Int, private val height: Int, private val size: 
                 wall.localPosition = Vector3(x, size/2, y)
             }
         }
+        return base
     }
+
 }
