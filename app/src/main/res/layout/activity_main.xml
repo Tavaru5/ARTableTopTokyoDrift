@@ -10,6 +10,18 @@
     <fragment android:name="com.google.ar.sceneform.ux.ArFragment"
               android:id="@+id/ux_fragment"
               android:layout_width="match_parent"
-              android:layout_height="match_parent" />
+              android:layout_height="match_parent" >
+        <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+            <Button
+                    android:id="@+id/signInButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:text="SIGN IN"
+                    />
+        </RelativeLayout>
+    </fragment>
 
 </android.support.constraint.ConstraintLayout>
