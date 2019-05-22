@@ -22,13 +22,21 @@ class Board (
     private var xWall: ModelRenderable? = null
     private var yWall: ModelRenderable? = null
 
+    private val tileSeparation = 0.04f
+
 
     init {
         MaterialFactory.makeOpaqueWithColor(context, com.google.ar.sceneform.rendering.Color(Color.BLACK))
             .thenAccept { material ->
-                tileRenderable = ShapeFactory.makeCube(Vector3(0.96f * size,0.01f,0.96f * size), Vector3(0f,0f,0f),material)
-                xWall = ShapeFactory.makeCube(Vector3(size, size , 0.08f * size), Vector3(0f,0f,0f),material)
-                yWall = ShapeFactory.makeCube(Vector3(0.08f * size, size , size), Vector3(0f,0f,0f),material)
+                tileRenderable = ShapeFactory.makeCube(
+                    Vector3(
+                        (1f - tileSeparation / 2) * size,
+                        0.01f,
+                        (1f - tileSeparation / 2) * size),
+                    Vector3(0f,0f,0f),
+                    material)
+                xWall = ShapeFactory.makeCube(Vector3(size, size , tileSeparation * size), Vector3(0f,0f,0f),material)
+                yWall = ShapeFactory.makeCube(Vector3(tileSeparation * size, size , size), Vector3(0f,0f,0f),material)
 
             }
     }
