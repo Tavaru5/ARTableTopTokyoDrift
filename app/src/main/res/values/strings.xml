@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">ARTableTop</string>
+    <string name="settings_button_description">Settings button</string>
+    <string name="sign_in">SIGN IN</string>
 </resources>
