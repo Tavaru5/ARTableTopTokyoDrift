@@ -1,21 +1,18 @@
-package com.tavarus.artabletop
+package com.tavarus.artabletop.Objects
 
 import android.content.Context
 import android.graphics.Color
-import android.util.Log
 import com.google.ar.sceneform.math.Vector3
 import com.google.ar.sceneform.rendering.MaterialFactory
 import com.google.ar.sceneform.rendering.ModelRenderable
 import com.google.ar.sceneform.rendering.ShapeFactory
 import com.google.ar.sceneform.Node
+import com.tavarus.artabletop.POJO.BoardPOJO
 
 
 class Board (
-    private val width: Int,
-    private val height: Int,
     private val size: Float,
-    private val xWalls: Array<Int>,
-    private val yWalls: Array<Int>,
+    private val boardPOJO: BoardPOJO,
     context: Context
 ) {
     private var tileRenderable: ModelRenderable? = null
@@ -43,6 +40,10 @@ class Board (
 
     fun boardNode(): Node {
         val base = Node()
+        val height = boardPOJO.height
+        val width = boardPOJO.width
+        val xWalls = boardPOJO.xWalls
+        val yWalls = boardPOJO.yWalls
         base.localPosition = Vector3(0f, 0.2f, 0f)
         for (index in 0 until height * width) {
             val tile = Node()
