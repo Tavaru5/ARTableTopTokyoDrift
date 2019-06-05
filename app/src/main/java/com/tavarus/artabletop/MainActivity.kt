@@ -32,19 +32,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun setupBoard(onSuccess: () -> Unit) {
-        val firestore = FirebaseFirestore.getInstance()
-        val user = FirebaseAuth.getInstance().currentUser
-        val doc = firestore.collection("users").document(user!!.uid)
-        doc.get().addOnSuccessListener { document ->
-            if (document != null) {
-                BoardController.INSTANCE.initialize(document.toObject(BoardListPOJO::class.java)!!, this)
-                onSuccess()
-            } else {
-                Log.d("KOG", "No such document")
-            }
-        }.addOnFailureListener { exception ->
-            Log.d("KOG", "get failed with ", exception)
-        }
+        BoardController.INSTANCE.initialize(AuthController.INSTANCE.getUser()!!.uid, this, onSuccess, {})
     }
 
     fun onLogout() {

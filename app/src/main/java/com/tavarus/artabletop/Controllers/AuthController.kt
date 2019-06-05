@@ -48,4 +48,8 @@ class AuthController() {
         activity.onLogout()
     }
 
+    fun getUser() : FirebaseUser? {
+        return auth.currentUser
+    }
+
 }

@@ -11,10 +11,10 @@ import com.tavarus.artabletop.POJO.BoardPOJO
 
 
 class Board (
-    private val size: Float,
     private val boardPOJO: BoardPOJO,
-    context: Context
-) {
+    context: Context,
+    private val size: Float = 0.05f
+    ) {
     private var tileRenderable: ModelRenderable? = null
     private var xWall: ModelRenderable? = null
     private var yWall: ModelRenderable? = null
