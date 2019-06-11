@@ -1,6 +1,5 @@
-package com.tavarus.artabletop.Controllers
+package com.tavarus.artabletop.controllers
 
-import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.tavarus.artabletop.MainActivity

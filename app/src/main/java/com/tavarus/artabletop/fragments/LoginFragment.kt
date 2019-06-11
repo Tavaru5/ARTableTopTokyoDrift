@@ -1,4 +1,4 @@
-package com.tavarus.artabletop.Fragments
+package com.tavarus.artabletop.fragments
 
 import android.graphics.Paint
 import android.os.Bundle
@@ -6,7 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.tavarus.artabletop.Controllers.AuthController
+import com.tavarus.artabletop.controllers.AuthController
 import com.tavarus.artabletop.MainActivity
 import com.tavarus.artabletop.R
 import kotlinx.android.synthetic.main.login_fragment.*

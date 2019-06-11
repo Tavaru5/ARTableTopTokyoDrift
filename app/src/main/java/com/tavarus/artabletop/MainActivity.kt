@@ -6,37 +6,48 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FirebaseFirestore
-import com.tavarus.artabletop.Controllers.AuthController
-import com.tavarus.artabletop.Controllers.BoardController
-import com.tavarus.artabletop.Fragments.BoardFragment
-import com.tavarus.artabletop.Fragments.LoginFragment
-import com.tavarus.artabletop.POJO.BoardListPOJO
+import com.tavarus.artabletop.controllers.AuthController
+import com.tavarus.artabletop.fragments.HomeFragment
+import com.tavarus.artabletop.fragments.LoginFragment
+import com.tavarus.artabletop.models.NavState
+import com.tavarus.artabletop.models.NavStateEnum
+import androidx.lifecycle.Observer
+import com.tavarus.artabletop.viewModels.DaggerBoardsInjector
+import javax.inject.Inject
 
 
 class MainActivity : AppCompatActivity() {
 
+    @Inject
+    lateinit var navState: NavState
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        DaggerBoardsInjector.builder().build().inject(this)
+        (applicationContext as App).provideCoreComponent().inject(this)
+
+        val navObserver = Observer<NavStateEnum> { navStateEnum ->
+            // Handle navigation
+        }
+
+
+        navState.currentScreen.observe(this, navObserver)
+
         if (!AuthController.INSTANCE.isLoggedIn()) {
             addFragment(LoginFragment())
         } else {
-            setupBoard { addFragment(BoardFragment()) }
+            //Make calls, then
+            addFragment(HomeFragment())
         }
     }
 
     fun onLogin() {
-       setupBoard { replaceFragment(BoardFragment()) }
-    }
-
-    fun setupBoard(onSuccess: () -> Unit) {
-        BoardController.INSTANCE.initialize(AuthController.INSTANCE.getUser()!!.uid, this, onSuccess, {})
+        replaceFragment(HomeFragment())
     }
 
     fun onLogout() {
-        BoardController.INSTANCE.clear()
         replaceFragment(LoginFragment())
     }
 
