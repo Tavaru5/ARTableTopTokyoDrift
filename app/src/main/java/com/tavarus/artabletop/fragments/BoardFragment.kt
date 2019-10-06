@@ -13,40 +13,38 @@ import com.google.ar.sceneform.rendering.MaterialFactory
 import com.google.ar.sceneform.rendering.ModelRenderable
 import com.google.ar.sceneform.rendering.ShapeFactory
 import com.google.ar.sceneform.ux.ArFragment
+import com.tavarus.artabletop.App
 import com.tavarus.artabletop.models.Board
+import com.tavarus.artabletop.viewModels.BoardViewModel
+import javax.inject.Inject
 
 class BoardFragment : ArFragment() {
 
 
     var canPlace: Boolean = false
-//
-//    @Inject
-//    lateinit var boardListViewModel: BoardListViewModel
+
+    @Inject
+    lateinit var boardViewModel: BoardViewModel
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Add bottom drawer here
-
-//        DaggerViewModelInjector.builder().build().inject(this)
+        (activity?.applicationContext as App).provideCoreComponent().inject(this)
 
         val boardObserver = Observer<Board> { newBoard ->
             canPlace = (newBoard != null)
             //Hide/show loading
         }
 
-//        boardListViewModel.currentBoard.observe(this, boardObserver)
+        boardViewModel.board.observe(this, boardObserver)
 
-
-        //We'll need to do a recyclerview in the bottom drawer I believe
-        //In that view, we need an imageView that is a clickable plus button
 
         setOnTapArPlaneListener { hitResult: HitResult, _: Plane, _: MotionEvent ->
             if (canPlace) {
                 val anchor = hitResult.createAnchor()
                 val anchorNode = AnchorNode(anchor)
                 anchorNode.setParent(arSceneView.scene)
-//                anchorNode.addChild(getBoardNode(boardListViewModel.currentBoard.value!!))
+                anchorNode.addChild(getBoardNode(boardViewModel.board.value!!))
             }
         }
     }

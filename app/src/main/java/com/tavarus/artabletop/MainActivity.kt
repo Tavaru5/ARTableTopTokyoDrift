@@ -1,18 +1,17 @@
 package com.tavarus.artabletop
 
 import android.os.Bundle
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
+import androidx.lifecycle.Observer
 import com.tavarus.artabletop.controllers.AuthController
+import com.tavarus.artabletop.fragments.BoardFragment
 import com.tavarus.artabletop.fragments.HomeFragment
 import com.tavarus.artabletop.fragments.LoginFragment
 import com.tavarus.artabletop.models.NavState
 import com.tavarus.artabletop.models.NavStateEnum
-import androidx.lifecycle.Observer
-import com.tavarus.artabletop.viewModels.DaggerBoardsInjector
 import javax.inject.Inject
 
 
@@ -25,11 +24,24 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        DaggerBoardsInjector.builder().build().inject(this)
         (applicationContext as App).provideCoreComponent().inject(this)
 
         val navObserver = Observer<NavStateEnum> { navStateEnum ->
             // Handle navigation
+            when (navStateEnum) {
+                NavStateEnum.BOARD -> {
+                    addFragment(BoardFragment())
+                }
+                NavStateEnum.HOME -> {
+                    // I don't think we're going to actually want to add
+                    // the home fragment on top; we might need to implement
+                    // our own stack handling.
+                    addFragment(HomeFragment())
+                }
+                else -> {
+                    // oh no. This should never happen. Do no navigation
+                }
+            }
         }
 
 

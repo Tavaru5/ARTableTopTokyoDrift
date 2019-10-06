@@ -3,18 +3,15 @@ package com.tavarus.artabletop.models
 import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import io.reactivex.subjects.PublishSubject
+import io.reactivex.subjects.BehaviorSubject
 import javax.inject.Inject
 
 
 class BoardRepo @Inject constructor() {
 
-    var boardsList: BoardList?
-
-    val observableData: PublishSubject<BoardList> = PublishSubject.create()
+    val observableData: BehaviorSubject<BoardList> = BehaviorSubject.create()
 
     init {
-        boardsList = BoardList()
         loadBoards()
     }
 
@@ -26,7 +23,6 @@ class BoardRepo @Inject constructor() {
             if (document != null) {
                 val tempBoardsList = document.toObject(BoardList::class.java)
                 observableData.onNext(tempBoardsList!!)
-                boardsList = tempBoardsList
             } else {
                 Log.d("KOG", "No such document")
             }

@@ -1,6 +1,7 @@
 package com.tavarus.artabletop
 
 import android.content.Context
+import com.tavarus.artabletop.fragments.BoardFragment
 import com.tavarus.artabletop.fragments.HomeFragment
 import com.tavarus.artabletop.models.BoardRepoModule
 import com.tavarus.artabletop.models.NavigationModule
@@ -14,6 +15,8 @@ import javax.inject.Singleton
 interface CoreComponent {
 
     fun inject(homeFragment: HomeFragment)
+
+    fun inject(boardFragment: BoardFragment)
 
     fun inject(mainActivity: MainActivity)
 

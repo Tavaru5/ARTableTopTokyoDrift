@@ -1,10 +1,7 @@
 package com.tavarus.artabletop.viewModels
 
 import android.os.Bundle
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Observer
-import com.tavarus.artabletop.CoreComponent
 import com.tavarus.artabletop.models.BoardList
 import com.tavarus.artabletop.models.BoardRepo
 import com.tavarus.artabletop.models.NavState
@@ -23,9 +20,9 @@ class HomeViewModel @Inject constructor(val boardRepo: BoardRepo, val navState: 
         }
     }
 
-    fun navigateToBoard(id: Long) {
+    fun navigateToBoard(id: String) {
         val args = Bundle()
-        args.putLong("ID", id)
+        args.putString("ID", id)
         navState.pushToView(NavStateEnum.BOARD, args)
     }
 

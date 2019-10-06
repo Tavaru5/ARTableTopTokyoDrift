@@ -31,7 +31,7 @@ class HomeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         (activity?.applicationContext as App).provideCoreComponent().inject(this)
 
-        boardListAdapter = BoardListAdapter(viewModel.boardsList.value!!.boards, context!!) { id: Long ->
+        boardListAdapter = BoardListAdapter(viewModel.boardsList.value!!.boards.toList(), context!!) { id: String ->
             viewModel.navigateToBoard(id)
         }
 
@@ -40,7 +40,7 @@ class HomeFragment : Fragment() {
 
         val boardObserver = Observer<BoardList> { boards ->
             if (boards?.boards?.size ?: 0 > 0) {
-                boardListAdapter.boards = boards.boards
+                boardListAdapter.boards = boards.boards.toList()
                 boardListAdapter.notifyDataSetChanged()
             }
             //Hide/show loading
