@@ -3,6 +3,7 @@ package com.tavarus.artabletop
 import android.content.Context
 import com.tavarus.artabletop.fragments.BoardFragment
 import com.tavarus.artabletop.fragments.HomeFragment
+import com.tavarus.artabletop.fragments.LoginFragment
 import com.tavarus.artabletop.models.BoardRepoModule
 import com.tavarus.artabletop.models.NavigationModule
 import com.tavarus.artabletop.viewModels.HomeViewModel
@@ -17,6 +18,8 @@ interface CoreComponent {
     fun inject(homeFragment: HomeFragment)
 
     fun inject(boardFragment: BoardFragment)
+
+    fun inject(loginFragment: LoginFragment)
 
     fun inject(mainActivity: MainActivity)
 

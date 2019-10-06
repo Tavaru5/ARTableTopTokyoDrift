@@ -2,19 +2,24 @@ package com.tavarus.artabletop.fragments
 
 import android.graphics.Paint
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.tavarus.artabletop.controllers.AuthController
-import com.tavarus.artabletop.MainActivity
-import com.tavarus.artabletop.R
-import kotlinx.android.synthetic.main.login_fragment.*
 import android.view.animation.Animation
 import android.view.animation.Transformation
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
+import com.tavarus.artabletop.App
+import com.tavarus.artabletop.R
+import com.tavarus.artabletop.viewModels.AuthViewModel
+import kotlinx.android.synthetic.main.login_fragment.*
+import javax.inject.Inject
 
 
 class LoginFragment : Fragment() {
+
+    @Inject
+    lateinit var viewModel: AuthViewModel
 
     private var signUp = false
 
@@ -28,26 +33,26 @@ class LoginFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        (activity?.applicationContext as App).provideCoreComponent().inject(this)
+
         swapText.paintFlags = (swapText.paintFlags or Paint.UNDERLINE_TEXT_FLAG)
+
+        val errorObserver = Observer<String> { message ->
+            showError(message)
+        }
+
+        viewModel.errorMessage.observe(this, errorObserver)
+
         actionButton.setOnClickListener {
             hideError()
             if (!signUp && validateLogin()) {
-                    AuthController.INSTANCE.logIn(
-                        emailInput.text.toString(),
-                        passwordInput.text.toString(),
-                        activity!! as MainActivity,
-                        {},
-                        { exception -> showError(exception?.localizedMessage ?: "") })
+                    viewModel.logIn(emailInput.text.toString(), passwordInput.text.toString())
             } else if (validateSignUp()) {
-                AuthController.INSTANCE.signUp(
-                    emailInput.text.toString(),
-                    passwordInput.text.toString(),
-                    activity!! as MainActivity,
-                    {},
-                    { exception -> showError(exception?.localizedMessage ?: "") })
+                viewModel.signUp(emailInput.text.toString(), passwordInput.text.toString())
             }
 
         }
+
         swapText.setOnClickListener {
             hideError()
             if (!signUp) {

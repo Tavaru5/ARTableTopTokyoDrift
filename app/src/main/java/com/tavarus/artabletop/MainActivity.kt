@@ -6,10 +6,11 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.Observer
-import com.tavarus.artabletop.controllers.AuthController
+import com.google.firebase.auth.FirebaseAuth
 import com.tavarus.artabletop.fragments.BoardFragment
 import com.tavarus.artabletop.fragments.HomeFragment
 import com.tavarus.artabletop.fragments.LoginFragment
+import com.tavarus.artabletop.models.NavActionEnum
 import com.tavarus.artabletop.models.NavState
 import com.tavarus.artabletop.models.NavStateEnum
 import javax.inject.Inject
@@ -30,13 +31,10 @@ class MainActivity : AppCompatActivity() {
             // Handle navigation
             when (navStateEnum) {
                 NavStateEnum.BOARD -> {
-                    addFragment(BoardFragment())
+                    moveTo(BoardFragment())
                 }
                 NavStateEnum.HOME -> {
-                    // I don't think we're going to actually want to add
-                    // the home fragment on top; we might need to implement
-                    // our own stack handling.
-                    addFragment(HomeFragment())
+                    moveTo(HomeFragment())
                 }
                 else -> {
                     // oh no. This should never happen. Do no navigation
@@ -47,20 +45,11 @@ class MainActivity : AppCompatActivity() {
 
         navState.currentScreen.observe(this, navObserver)
 
-        if (!AuthController.INSTANCE.isLoggedIn()) {
+        if (FirebaseAuth.getInstance().currentUser == null) {
             addFragment(LoginFragment())
         } else {
-            //Make calls, then
             addFragment(HomeFragment())
         }
-    }
-
-    fun onLogin() {
-        replaceFragment(HomeFragment())
-    }
-
-    fun onLogout() {
-        replaceFragment(LoginFragment())
     }
 
     inline fun FragmentManager.inTransaction(func: FragmentTransaction.() -> Unit) {
@@ -76,5 +65,12 @@ class MainActivity : AppCompatActivity() {
 
     fun AppCompatActivity.replaceFragment(fragment: Fragment) {
         supportFragmentManager.inTransaction{ replace(R.id.fragment_placeholder, fragment) }
+    }
+
+    fun moveTo(fragment: Fragment) {
+        when (navState.action.value) {
+            NavActionEnum.REPLACE -> replaceFragment(fragment)
+            NavActionEnum.PUSH -> addFragment(fragment)
+        }
     }
 }

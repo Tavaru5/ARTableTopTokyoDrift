@@ -48,6 +48,7 @@ class HomeFragment : Fragment() {
 
         viewModel.boardsList.observe(this, boardObserver)
 
+        signOutButton.setOnClickListener { viewModel.signOut() }
 
     }
 }

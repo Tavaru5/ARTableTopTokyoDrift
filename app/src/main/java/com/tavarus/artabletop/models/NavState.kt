@@ -9,6 +9,7 @@ import javax.inject.Singleton
 class NavState @Inject constructor() {
     var currentScreen: MutableLiveData<NavStateEnum> = MutableLiveData()
     var screenArgs: MutableLiveData<Bundle> = MutableLiveData()
+    var action: MutableLiveData<NavActionEnum> = MutableLiveData()
 
     init {
         currentScreen.value = NavStateEnum.HOME
@@ -17,6 +18,13 @@ class NavState @Inject constructor() {
     fun pushToView(screen: NavStateEnum, args: Bundle = Bundle.EMPTY) {
         currentScreen.value = screen
         screenArgs.value = args
+        action.value = NavActionEnum.PUSH
+    }
+
+    fun replaceWithView(screen: NavStateEnum, args: Bundle = Bundle.EMPTY) {
+        currentScreen.value = screen
+        screenArgs.value = args
+        action.value = NavActionEnum.REPLACE
     }
 
     //How do I go back??
