@@ -11,7 +11,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import com.tavarus.artabletop.App
 import com.tavarus.artabletop.R
-import com.tavarus.artabletop.viewModels.AuthViewModel
+import com.tavarus.artabletop.viewModels.LoginViewModel
 import kotlinx.android.synthetic.main.login_fragment.*
 import javax.inject.Inject
 
@@ -19,7 +19,7 @@ import javax.inject.Inject
 class LoginFragment : Fragment() {
 
     @Inject
-    lateinit var viewModel: AuthViewModel
+    lateinit var viewModel: LoginViewModel
 
     private var signUp = false
 
@@ -45,10 +45,15 @@ class LoginFragment : Fragment() {
 
         actionButton.setOnClickListener {
             hideError()
-            if (!signUp && validateLogin()) {
+            if (!signUp) {
                     viewModel.logIn(emailInput.text.toString(), passwordInput.text.toString())
-            } else if (validateSignUp()) {
-                viewModel.signUp(emailInput.text.toString(), passwordInput.text.toString())
+            } else  {
+                viewModel.signUp(
+                    emailInput.text.toString(),
+                    confirmEmailInput.text.toString(),
+                    passwordInput.text.toString(),
+                    confirmPasswordInput.text.toString()
+                )
             }
 
         }
@@ -81,23 +86,6 @@ class LoginFragment : Fragment() {
                 signUp = false
             }
         }
-    }
-
-    private fun validateLogin() : Boolean {
-        //Do some field level validation
-        return true
-    }
-
-    private fun validateSignUp() : Boolean {
-        if (emailInput.text != confirmEmailInput.text) {
-            showError("Emails don't match")
-            return false
-        }
-        if (passwordInput.text != confirmPasswordInput.text) {
-            showError("Passwords don't match")
-            return false
-        }
-        return true
     }
 
     private fun openAnim(view: View, onEnd: ()->Unit){
