@@ -10,6 +10,7 @@ class NavState @Inject constructor() {
     var currentScreen: MutableLiveData<NavStateEnum> = MutableLiveData()
     var screenArgs: MutableLiveData<Bundle> = MutableLiveData()
     var action: MutableLiveData<NavActionEnum> = MutableLiveData()
+    private var screenStack: MutableList<NavStateEnum> = mutableListOf()
 
     init {
         currentScreen.value = NavStateEnum.HOME
@@ -19,6 +20,7 @@ class NavState @Inject constructor() {
         currentScreen.value = screen
         screenArgs.value = args
         action.value = NavActionEnum.PUSH
+        screenStack.add(screen)
     }
 
     fun replaceWithView(screen: NavStateEnum, args: Bundle = Bundle.EMPTY) {
@@ -27,5 +29,5 @@ class NavState @Inject constructor() {
         action.value = NavActionEnum.REPLACE
     }
 
-    //How do I go back??
+    //TODO: We need a back action
 }

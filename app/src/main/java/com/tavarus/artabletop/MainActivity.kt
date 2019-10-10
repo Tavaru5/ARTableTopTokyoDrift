@@ -1,6 +1,7 @@
 package com.tavarus.artabletop
 
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
@@ -31,10 +32,16 @@ class MainActivity : AppCompatActivity() {
             // Handle navigation
             when (navStateEnum) {
                 NavStateEnum.BOARD -> {
+                    Log.d("KOG", "moving to board")
                     moveTo(BoardFragment())
                 }
                 NavStateEnum.HOME -> {
+                    Log.d("KOG", "Moving to home")
                     moveTo(HomeFragment())
+                }
+                NavStateEnum.LOGIN -> {
+                    Log.d("KOG", "Moving to Login")
+                    moveTo(LoginFragment())
                 }
                 else -> {
                     // oh no. This should never happen. Do no navigation
@@ -45,11 +52,8 @@ class MainActivity : AppCompatActivity() {
 
         navState.currentScreen.observe(this, navObserver)
 
-        if (FirebaseAuth.getInstance().currentUser == null) {
-            addFragment(LoginFragment())
-        } else {
-            addFragment(HomeFragment())
-        }
+        // This should move to the home fragment. If, when you get there you aren't logged in, move to login
+        //TODO: We need to observe the aciton
     }
 
     inline fun FragmentManager.inTransaction(func: FragmentTransaction.() -> Unit) {
@@ -59,7 +63,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun AppCompatActivity.addFragment(fragment: Fragment){
-        supportFragmentManager.inTransaction { add(R.id.fragment_placeholder, fragment) }
+        supportFragmentManager.inTransaction { add(R.id.fragment_placeholder, fragment).addToBackStack(fragment.tag) }
     }
 
 
@@ -72,5 +76,12 @@ class MainActivity : AppCompatActivity() {
             NavActionEnum.REPLACE -> replaceFragment(fragment)
             NavActionEnum.PUSH -> addFragment(fragment)
         }
+    }
+
+    override fun onBackPressed() {
+        // We have like 4 fragments here when we should only have 1. What's going on?
+        Log.d("KOG", "GOIN back")
+        Log.d("KOG", supportFragmentManager.backStackEntryCount.toString())
+        supportFragmentManager.popBackStack()
     }
 }
