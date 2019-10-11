@@ -11,11 +11,8 @@ class BoardRepo @Inject constructor() {
 
     val observableData: BehaviorSubject<BoardList> = BehaviorSubject.create()
 
-    init {
-        loadBoards()
-    }
+    fun loadBoards() {
 
-    private fun loadBoards() {
         val firestore = FirebaseFirestore.getInstance()
         val doc = firestore.collection("users")
             .document(FirebaseAuth.getInstance().currentUser?.uid ?: "")

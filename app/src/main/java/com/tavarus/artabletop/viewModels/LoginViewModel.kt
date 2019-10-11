@@ -32,8 +32,7 @@ class LoginViewModel @Inject constructor(val navState: NavState) {
             auth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener { task ->
                     if (task.isSuccessful) {
-                        //TODO: Here we go back
-                        navState.replaceWithView(NavStateEnum.HOME)
+                        navState.goBack()
                     } else {
                         errorMessage.value = task.exception?.localizedMessage
                     }

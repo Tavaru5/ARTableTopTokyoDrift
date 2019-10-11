@@ -14,6 +14,7 @@ class NavState @Inject constructor() {
 
     init {
         currentScreen.value = NavStateEnum.HOME
+        action.value = NavActionEnum.PUSH
     }
 
     fun pushToView(screen: NavStateEnum, args: Bundle = Bundle.EMPTY) {
@@ -29,5 +30,7 @@ class NavState @Inject constructor() {
         action.value = NavActionEnum.REPLACE
     }
 
-    //TODO: We need a back action
+    fun goBack() {
+        action.value = NavActionEnum.BACK
+    }
 }

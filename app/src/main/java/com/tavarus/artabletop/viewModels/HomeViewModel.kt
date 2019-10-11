@@ -1,7 +1,6 @@
 package com.tavarus.artabletop.viewModels
 
 import android.os.Bundle
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.google.firebase.auth.FirebaseAuth
 import com.tavarus.artabletop.models.BoardList
@@ -21,9 +20,12 @@ class HomeViewModel @Inject constructor(val boardRepo: BoardRepo, val navState: 
             boardsList.value = boards
         }
 
-        if (FirebaseAuth.getInstance().currentUser == null) {
-            navState.pushToView(NavStateEnum.LOGIN)
-            Log.d("KOG", "ADDING LOGIN")
+        FirebaseAuth.getInstance().addAuthStateListener { firebaseAuth ->
+            if (firebaseAuth.currentUser == null) {
+                navState.pushToView(NavStateEnum.LOGIN)
+            } else {
+                boardRepo.loadBoards()
+            }
         }
     }
 
@@ -35,7 +37,6 @@ class HomeViewModel @Inject constructor(val boardRepo: BoardRepo, val navState: 
 
     fun signOut() {
         FirebaseAuth.getInstance().signOut()
-        navState.replaceWithView(NavStateEnum.LOGIN)
     }
 
 }
