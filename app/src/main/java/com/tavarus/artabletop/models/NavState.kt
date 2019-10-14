@@ -7,28 +7,24 @@ import javax.inject.Singleton
 
 @Singleton
 class NavState @Inject constructor() {
-    var currentScreen: MutableLiveData<NavStateEnum> = MutableLiveData()
-    var screenArgs: MutableLiveData<Bundle> = MutableLiveData()
+    var currentScreen: NavStateEnum = NavStateEnum.HOME
+    var screenArgs: Bundle = Bundle.EMPTY
     var action: MutableLiveData<NavActionEnum> = MutableLiveData()
+    var allowBackNav = true
 
     init {
-        currentScreen.value = NavStateEnum.HOME
         action.value = NavActionEnum.PUSH
     }
 
-    fun pushToView(screen: NavStateEnum, args: Bundle = Bundle.EMPTY) {
-        currentScreen.value = screen
-        screenArgs.value = args
+    fun pushToView(screen: NavStateEnum, allowBack: Boolean = true, args: Bundle = Bundle.EMPTY) {
+        currentScreen = screen
+        screenArgs = args
         action.value = NavActionEnum.PUSH
-    }
-
-    fun replaceWithView(screen: NavStateEnum, args: Bundle = Bundle.EMPTY) {
-        currentScreen.value = screen
-        screenArgs.value = args
-        action.value = NavActionEnum.REPLACE
+        allowBackNav = allowBack
     }
 
     fun goBack() {
+        allowBackNav = true
         action.value = NavActionEnum.BACK
     }
 }

@@ -1,7 +1,6 @@
 package com.tavarus.artabletop
 
 import android.os.Bundle
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
@@ -22,7 +21,7 @@ class MainActivity : AppCompatActivity() {
     lateinit var navState: NavState
 
     fun createFrag(): Fragment? {
-        return when(navState.currentScreen.value) {
+        return when(navState.currentScreen) {
             NavStateEnum.LOGIN -> {
                 LoginFragment()
             }
@@ -80,11 +79,11 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
-        if (supportFragmentManager.backStackEntryCount > 0) {
+        if (supportFragmentManager.backStackEntryCount > 1 && navState.allowBackNav) {
             supportFragmentManager.popBackStack()
         } else {
             // In the future maybe pop an exit dialog?
-            super.onBackPressed()
+            finishAndRemoveTask()
         }
     }
 }

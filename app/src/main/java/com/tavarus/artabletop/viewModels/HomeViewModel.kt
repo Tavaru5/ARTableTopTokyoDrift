@@ -22,7 +22,7 @@ class HomeViewModel @Inject constructor(val boardRepo: BoardRepo, val navState: 
 
         FirebaseAuth.getInstance().addAuthStateListener { firebaseAuth ->
             if (firebaseAuth.currentUser == null) {
-                navState.pushToView(NavStateEnum.LOGIN)
+                navState.pushToView(NavStateEnum.LOGIN, false)
             } else {
                 boardRepo.loadBoards()
             }
@@ -31,7 +31,7 @@ class HomeViewModel @Inject constructor(val boardRepo: BoardRepo, val navState: 
 
     fun navigateToBoard(id: String) {
         val args = Bundle()
-        navState.pushToView(NavStateEnum.BOARD, args)
+        navState.pushToView(NavStateEnum.BOARD, true, args)
     }
 
     fun signOut() {
