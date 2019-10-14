@@ -27,4 +27,8 @@ class BoardRepo @Inject constructor() {
             Log.d("KOG", "get failed with ", exception)
         }
     }
+
+    fun clearBoards() {
+        observableData.onNext(BoardList())
+    }
 }

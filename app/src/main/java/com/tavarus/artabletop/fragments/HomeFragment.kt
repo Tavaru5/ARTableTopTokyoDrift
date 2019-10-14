@@ -1,7 +1,6 @@
 package com.tavarus.artabletop.fragments
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,8 +10,8 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.tavarus.artabletop.App
 import com.tavarus.artabletop.R
 import com.tavarus.artabletop.adapters.BoardListAdapter
-import com.tavarus.artabletop.models.*
-import com.tavarus.artabletop.viewModels.*
+import com.tavarus.artabletop.models.BoardList
+import com.tavarus.artabletop.viewModels.HomeViewModel
 import kotlinx.android.synthetic.main.home_fragment.*
 import javax.inject.Inject
 
@@ -29,6 +28,8 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        (activity?.applicationContext as App).provideBoardComponent().inject(this)
         (activity?.applicationContext as App).provideCoreComponent().inject(this)
 
         boardListAdapter = BoardListAdapter(viewModel.boardsList.value!!.boards.toList(), context!!) { id: String ->

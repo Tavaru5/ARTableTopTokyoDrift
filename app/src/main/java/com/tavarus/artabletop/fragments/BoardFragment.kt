@@ -29,6 +29,7 @@ class BoardFragment : ArFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        (activity?.applicationContext as App).provideBoardComponent().inject(this)
         (activity?.applicationContext as App).provideCoreComponent().inject(this)
 
         val boardObserver = Observer<Board> { newBoard ->

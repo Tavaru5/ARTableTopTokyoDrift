@@ -61,7 +61,6 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-
         navState.action.observe(this, navObserver)
     }
 

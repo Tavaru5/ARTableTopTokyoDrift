@@ -31,12 +31,12 @@ class HomeViewModel @Inject constructor(val boardRepo: BoardRepo, val navState: 
 
     fun navigateToBoard(id: String) {
         val args = Bundle()
-        args.putString("ID", id)
         navState.pushToView(NavStateEnum.BOARD, args)
     }
 
     fun signOut() {
         FirebaseAuth.getInstance().signOut()
+        boardRepo.clearBoards()
     }
 
 }
