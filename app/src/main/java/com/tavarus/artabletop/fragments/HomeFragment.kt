@@ -29,6 +29,8 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        // TODO: Show loading
+
         (activity?.applicationContext as App).provideBoardComponent().inject(this)
         (activity?.applicationContext as App).provideCoreComponent().inject(this)
 
@@ -44,7 +46,7 @@ class HomeFragment : Fragment() {
                 boardListAdapter.boards = boards.boards.toList()
                 boardListAdapter.notifyDataSetChanged()
             }
-            //Hide/show loading
+            // TODO: Hide loading
         }
 
         viewModel.boardsList.observe(this, boardObserver)

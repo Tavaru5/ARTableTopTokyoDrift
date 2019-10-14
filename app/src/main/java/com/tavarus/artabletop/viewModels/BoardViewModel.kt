@@ -12,7 +12,6 @@ class BoardViewModel @Inject constructor(val boardRepo: BoardRepo, val navState:
 
     init {
         board.value = Board()
-        //Observe changes to boardRepo
         boardRepo.observableData.subscribe {boards ->
             board.value = boards.boards[navState.screenArgs.getString("ID")]
         }

@@ -34,7 +34,7 @@ class BoardFragment : ArFragment() {
 
         val boardObserver = Observer<Board> { newBoard ->
             canPlace = (newBoard != null)
-            //Hide/show loading
+            // TODO: Hide/show loading
         }
 
         boardViewModel.board.observe(this, boardObserver)

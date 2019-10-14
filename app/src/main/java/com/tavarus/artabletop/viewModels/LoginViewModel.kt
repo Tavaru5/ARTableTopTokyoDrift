@@ -41,7 +41,7 @@ class LoginViewModel @Inject constructor(val navState: NavState) {
     }
 
     private fun validateLogin() : Boolean {
-        //Do some field level validation
+        // TODO: Do some field level validation?
         return true
     }
 }

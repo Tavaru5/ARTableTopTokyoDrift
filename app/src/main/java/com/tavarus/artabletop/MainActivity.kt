@@ -82,7 +82,7 @@ class MainActivity : AppCompatActivity() {
         if (supportFragmentManager.backStackEntryCount > 1 && navState.allowBackNav) {
             supportFragmentManager.popBackStack()
         } else {
-            // In the future maybe pop an exit dialog?
+            // TODO: Potentially add a pop up dialog
             finishAndRemoveTask()
         }
     }

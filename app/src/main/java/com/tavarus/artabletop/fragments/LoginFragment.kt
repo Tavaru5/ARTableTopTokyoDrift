@@ -43,6 +43,7 @@ class LoginFragment : Fragment() {
 
         viewModel.errorMessage.observe(this, errorObserver)
 
+        // TODO: Add loading on button
         actionButton.setOnClickListener {
             hideError()
             if (!signUp) {
@@ -135,7 +136,7 @@ class LoginFragment : Fragment() {
         view.requestLayout()
     }
 
-    //These should be animated eventually? Also loading on the button should be
+    // TODO: Animate error visibility
     private fun showError(message: String) {
         if (message.isNotEmpty()) {
             exceptionText.visibility = View.VISIBLE

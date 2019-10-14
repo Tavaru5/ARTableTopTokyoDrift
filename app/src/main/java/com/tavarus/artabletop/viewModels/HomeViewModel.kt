@@ -15,7 +15,6 @@ class HomeViewModel @Inject constructor(val boardRepo: BoardRepo, val navState: 
 
     init {
         boardsList.value = BoardList()
-        //Observe changes to boardRepo
         boardRepo.observableData.subscribe {boards ->
             boardsList.value = boards
         }
