@@ -1,43 +1,66 @@
 package com.tavarus.artabletop
 
 import android.os.Bundle
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FirebaseFirestore
-import com.tavarus.artabletop.Controllers.AuthController
-import com.tavarus.artabletop.Controllers.BoardController
-import com.tavarus.artabletop.Fragments.BoardFragment
-import com.tavarus.artabletop.Fragments.LoginFragment
-import com.tavarus.artabletop.POJO.BoardListPOJO
+import androidx.lifecycle.Observer
+import com.tavarus.artabletop.fragments.BoardFragment
+import com.tavarus.artabletop.fragments.HomeFragment
+import com.tavarus.artabletop.fragments.LoginFragment
+import com.tavarus.artabletop.models.NavActionEnum
+import com.tavarus.artabletop.models.NavState
+import com.tavarus.artabletop.models.NavStateEnum
+import javax.inject.Inject
 
 
 class MainActivity : AppCompatActivity() {
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-        if (!AuthController.INSTANCE.isLoggedIn()) {
-            addFragment(LoginFragment())
-        } else {
-            setupBoard { addFragment(BoardFragment()) }
+    @Inject
+    lateinit var navState: NavState
+
+    fun createFrag(): Fragment? {
+        return when(navState.currentScreen) {
+            NavStateEnum.LOGIN -> {
+                LoginFragment()
+            }
+            NavStateEnum.HOME -> {
+                HomeFragment()
+            }
+            NavStateEnum.BOARD -> {
+                BoardFragment()
+            }
+            else -> {
+                null
+            }
         }
     }
 
-    fun onLogin() {
-       setupBoard { replaceFragment(BoardFragment()) }
-    }
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
 
-    fun setupBoard(onSuccess: () -> Unit) {
-        BoardController.INSTANCE.initialize(AuthController.INSTANCE.getUser()!!.uid, this, onSuccess, {})
-    }
+        (applicationContext as App).provideCoreComponent().inject(this)
 
-    fun onLogout() {
-        BoardController.INSTANCE.clear()
-        replaceFragment(LoginFragment())
+        val navObserver = Observer<NavActionEnum> { navActionEnum ->
+            when (navActionEnum) {
+                NavActionEnum.PUSH -> {
+                    addFragment(createFrag()!!)
+                }
+                NavActionEnum.REPLACE -> {
+                    replaceFragment(createFrag()!!)
+                }
+                NavActionEnum.BACK -> {
+                    onBackPressed()
+                }
+                else -> {
+                    // oh no. This should never happen. Do no navigation
+                }
+            }
+        }
+
+        navState.action.observe(this, navObserver)
     }
 
     inline fun FragmentManager.inTransaction(func: FragmentTransaction.() -> Unit) {
@@ -47,11 +70,20 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun AppCompatActivity.addFragment(fragment: Fragment){
-        supportFragmentManager.inTransaction { add(R.id.fragment_placeholder, fragment) }
+        supportFragmentManager.inTransaction { add(R.id.fragment_placeholder, fragment).addToBackStack(fragment.tag) }
     }
 
 
     fun AppCompatActivity.replaceFragment(fragment: Fragment) {
         supportFragmentManager.inTransaction{ replace(R.id.fragment_placeholder, fragment) }
+    }
+
+    override fun onBackPressed() {
+        if (supportFragmentManager.backStackEntryCount > 1 && navState.allowBackNav) {
+            supportFragmentManager.popBackStack()
+        } else {
+            // TODO: Potentially add a pop up dialog
+            finishAndRemoveTask()
+        }
     }
 }

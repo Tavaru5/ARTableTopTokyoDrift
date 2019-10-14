@@ -1,20 +1,25 @@
-package com.tavarus.artabletop.Fragments
+package com.tavarus.artabletop.fragments
 
 import android.graphics.Paint
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.tavarus.artabletop.Controllers.AuthController
-import com.tavarus.artabletop.MainActivity
-import com.tavarus.artabletop.R
-import kotlinx.android.synthetic.main.login_fragment.*
 import android.view.animation.Animation
 import android.view.animation.Transformation
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
+import com.tavarus.artabletop.App
+import com.tavarus.artabletop.R
+import com.tavarus.artabletop.viewModels.LoginViewModel
+import kotlinx.android.synthetic.main.login_fragment.*
+import javax.inject.Inject
 
 
 class LoginFragment : Fragment() {
+
+    @Inject
+    lateinit var viewModel: LoginViewModel
 
     private var signUp = false
 
@@ -28,26 +33,32 @@ class LoginFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        (activity?.applicationContext as App).provideCoreComponent().inject(this)
+
         swapText.paintFlags = (swapText.paintFlags or Paint.UNDERLINE_TEXT_FLAG)
+
+        val errorObserver = Observer<String> { message ->
+            showError(message)
+        }
+
+        viewModel.errorMessage.observe(this, errorObserver)
+
+        // TODO: Add loading on button
         actionButton.setOnClickListener {
             hideError()
-            if (!signUp && validateLogin()) {
-                    AuthController.INSTANCE.logIn(
-                        emailInput.text.toString(),
-                        passwordInput.text.toString(),
-                        activity!! as MainActivity,
-                        {},
-                        { exception -> showError(exception?.localizedMessage ?: "") })
-            } else if (validateSignUp()) {
-                AuthController.INSTANCE.signUp(
+            if (!signUp) {
+                    viewModel.logIn(emailInput.text.toString(), passwordInput.text.toString())
+            } else  {
+                viewModel.signUp(
                     emailInput.text.toString(),
+                    confirmEmailInput.text.toString(),
                     passwordInput.text.toString(),
-                    activity!! as MainActivity,
-                    {},
-                    { exception -> showError(exception?.localizedMessage ?: "") })
+                    confirmPasswordInput.text.toString()
+                )
             }
 
         }
+
         swapText.setOnClickListener {
             hideError()
             if (!signUp) {
@@ -76,23 +87,6 @@ class LoginFragment : Fragment() {
                 signUp = false
             }
         }
-    }
-
-    private fun validateLogin() : Boolean {
-        //Do some field level validation
-        return true
-    }
-
-    private fun validateSignUp() : Boolean {
-        if (emailInput.text != confirmEmailInput.text) {
-            showError("Emails don't match")
-            return false
-        }
-        if (passwordInput.text != confirmPasswordInput.text) {
-            showError("Passwords don't match")
-            return false
-        }
-        return true
     }
 
     private fun openAnim(view: View, onEnd: ()->Unit){
@@ -142,7 +136,7 @@ class LoginFragment : Fragment() {
         view.requestLayout()
     }
 
-    //These should be animated eventually? Also loading on the button should be
+    // TODO: Animate error visibility
     private fun showError(message: String) {
         if (message.isNotEmpty()) {
             exceptionText.visibility = View.VISIBLE
