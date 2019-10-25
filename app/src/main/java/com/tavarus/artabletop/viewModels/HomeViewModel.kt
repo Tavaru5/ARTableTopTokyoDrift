@@ -27,7 +27,7 @@ class HomeViewModel @Inject constructor(val boardRepo: BoardRepo, val navState: 
         }
     }
 
-    fun navigateToBoard(id: String) {
+    fun goToBoard(id: String) {
         navState.selectedBoardID = id
         navState.pushToView(NavStateEnum.BOARD, true)
     }
@@ -35,6 +35,10 @@ class HomeViewModel @Inject constructor(val boardRepo: BoardRepo, val navState: 
     fun signOut() {
         FirebaseAuth.getInstance().signOut()
         boardRepo.clearBoards()
+    }
+
+    fun goToAddBoard() {
+        navState.pushToView(NavStateEnum.EDITOR)
     }
 
 }

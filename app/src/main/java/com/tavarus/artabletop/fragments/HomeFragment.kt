@@ -39,7 +39,7 @@ class HomeFragment : Fragment() {
         // TODO: Show loading
 
         boardListAdapter = BoardListAdapter(viewModel.boardsList.value!!.boards.toList(), context!!) { id: String ->
-            viewModel.navigateToBoard(id)
+            viewModel.goToBoard(id)
         }
 
         boardsRV.layoutManager = GridLayoutManager(context, 2)
@@ -56,6 +56,8 @@ class HomeFragment : Fragment() {
         viewModel.boardsList.observe(this, boardObserver)
 
         signOutButton.setOnClickListener { viewModel.signOut() }
+
+        addBoardFab.setOnClickListener { viewModel.goToAddBoard() }
 
     }
 }

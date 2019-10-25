@@ -1,6 +1,7 @@
 package com.tavarus.artabletop
 
 import com.tavarus.artabletop.fragments.BoardFragment
+import com.tavarus.artabletop.fragments.EditorFragment
 import com.tavarus.artabletop.fragments.HomeFragment
 import com.tavarus.artabletop.models.BoardRepoModule
 import dagger.Subcomponent
@@ -12,4 +13,6 @@ interface BoardComponent: DaggerComponent {
     fun inject(homeFragment: HomeFragment)
 
     fun inject(boardFragment: BoardFragment)
+
+    fun inject(editorFragment: EditorFragment)
 }

@@ -8,6 +8,7 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.Observer
 import com.tavarus.artabletop.fragments.BoardFragment
+import com.tavarus.artabletop.fragments.EditorFragment
 import com.tavarus.artabletop.fragments.HomeFragment
 import com.tavarus.artabletop.fragments.LoginFragment
 import com.tavarus.artabletop.models.NavActionEnum
@@ -31,6 +32,9 @@ class MainActivity : AppCompatActivity() {
             }
             NavStateEnum.BOARD -> {
                 BoardFragment()
+            }
+            NavStateEnum.EDITOR -> {
+                EditorFragment()
             }
         }
     }
