@@ -1,5 +1,6 @@
 package com.tavarus.artabletop
 
+import android.content.Context
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
@@ -31,9 +32,6 @@ class MainActivity : AppCompatActivity() {
             NavStateEnum.BOARD -> {
                 BoardFragment()
             }
-            else -> {
-                null
-            }
         }
     }
 
@@ -41,7 +39,8 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        (applicationContext as App).provideCoreComponent().inject(this)
+        val coreComponent = (applicationContext as App).provideCoreComponent()
+        coreComponent.componentManager().getOrCreateNavComponent(applicationContext as Context, coreComponent).inject(this)
 
         val navObserver = Observer<NavActionEnum> { navActionEnum ->
             when (navActionEnum) {

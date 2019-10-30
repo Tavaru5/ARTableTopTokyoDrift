@@ -1,5 +1,6 @@
 package com.tavarus.artabletop.fragments
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -22,6 +23,12 @@ class HomeFragment : Fragment() {
 
     private lateinit var boardListAdapter: BoardListAdapter
 
+    override fun onAttach(context: Context) {
+        val coreComponent = (activity?.applicationContext as App).provideCoreComponent()
+        coreComponent.componentManager().getOrCreateBoardComponent(activity?.applicationContext as Context, coreComponent).inject(this)
+        super.onAttach(context)
+    }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.home_fragment, container, false)
     }
@@ -30,9 +37,6 @@ class HomeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         // TODO: Show loading
-
-        (activity?.applicationContext as App).provideBoardComponent().inject(this)
-        (activity?.applicationContext as App).provideCoreComponent().inject(this)
 
         boardListAdapter = BoardListAdapter(viewModel.boardsList.value!!.boards.toList(), context!!) { id: String ->
             viewModel.navigateToBoard(id)

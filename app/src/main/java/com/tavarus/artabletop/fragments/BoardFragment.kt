@@ -1,8 +1,10 @@
 package com.tavarus.artabletop.fragments
 
+import android.content.Context
 import android.graphics.Color
 import android.os.Bundle
-import android.view.*
+import android.view.MotionEvent
+import android.view.View
 import androidx.lifecycle.Observer
 import com.google.ar.core.HitResult
 import com.google.ar.core.Plane
@@ -26,11 +28,13 @@ class BoardFragment : ArFragment() {
     @Inject
     lateinit var boardViewModel: BoardViewModel
 
+    override fun onAttach(context: Context) {
+        val coreComponent = (activity?.applicationContext as App).provideCoreComponent()
+        coreComponent.componentManager().getOrCreateBoardComponent(activity?.applicationContext as Context, coreComponent).inject(this)
+        super.onAttach(context)
+    }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        (activity?.applicationContext as App).provideBoardComponent().inject(this)
-        (activity?.applicationContext as App).provideCoreComponent().inject(this)
 
         val boardObserver = Observer<Board> { newBoard ->
             canPlace = (newBoard != null)
