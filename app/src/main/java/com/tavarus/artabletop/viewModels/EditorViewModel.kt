@@ -1,19 +1,18 @@
 package com.tavarus.artabletop.viewModels
 
 import androidx.lifecycle.MutableLiveData
-import com.tavarus.artabletop.models.Board
-import com.tavarus.artabletop.models.BoardRepo
-import com.tavarus.artabletop.models.NavState
+import com.tavarus.artabletop.models.*
 import javax.inject.Inject
 
 class EditorViewModel @Inject constructor(val boardRepo: BoardRepo, val navState: NavState) {
 
-    val board: MutableLiveData<Board> = MutableLiveData()
+    val board: MutableLiveData<NewBoard> = MutableLiveData()
 
     init {
-        val tempBoard = Board()
-        tempBoard.height = 4
-        tempBoard.width = 4
+        val tempBoard = NewBoard()
+        val emptyTile = Tile(MaterialEnum.NONE, MaterialEnum.NONE, MaterialEnum.NONE, MaterialEnum.NONE, MaterialEnum.NONE)
+        val emptyRow = listOf(emptyTile, emptyTile, emptyTile, emptyTile)
+        tempBoard.tiles = listOf(emptyRow, emptyRow, emptyRow, emptyRow)
         board.value = tempBoard
     }
 
