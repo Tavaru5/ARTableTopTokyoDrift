@@ -1,12 +1,13 @@
 package com.tavarus.artabletop.models
 
+import com.tavarus.artabletop.BoardScope
 import dagger.Module
 import dagger.Provides
-import javax.inject.Singleton
 
+@BoardScope
 @Module
 object BoardRepoModule {
-    @Singleton
+    @BoardScope
     @Provides
     fun provideBoardRepo(): BoardRepo {
         return BoardRepo()

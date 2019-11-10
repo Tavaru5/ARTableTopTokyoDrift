@@ -1,5 +1,6 @@
 package com.tavarus.artabletop.fragments
 
+import android.content.Context
 import android.graphics.Paint
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -33,7 +34,8 @@ class LoginFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        (activity?.applicationContext as App).provideCoreComponent().inject(this)
+        val coreComponent = (activity?.applicationContext as App).provideCoreComponent()
+        coreComponent.componentManager().getOrCreateNavComponent(activity?.applicationContext as Context, coreComponent).inject(this)
 
         swapText.paintFlags = (swapText.paintFlags or Paint.UNDERLINE_TEXT_FLAG)
 

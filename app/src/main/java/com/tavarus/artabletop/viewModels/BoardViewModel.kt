@@ -6,14 +6,14 @@ import com.tavarus.artabletop.models.BoardRepo
 import com.tavarus.artabletop.models.NavState
 import javax.inject.Inject
 
-class BoardViewModel @Inject constructor(val boardRepo: BoardRepo, val navState: NavState) {
+class BoardViewModel @Inject constructor(boardRepo: BoardRepo, val navState: NavState) {
 
     val board: MutableLiveData<Board> = MutableLiveData()
 
     init {
         board.value = Board()
-        boardRepo.observableData.subscribe {boards ->
-            board.value = boards.boards[navState.screenArgs.getString("ID")]
+        boardRepo.boardList.subscribe { boards ->
+            board.value = boards.boards[navState.selectedBoardID]
         }
     }
 

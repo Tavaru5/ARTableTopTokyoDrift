@@ -4,12 +4,12 @@ import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import io.reactivex.subjects.BehaviorSubject
+import java.util.*
 import javax.inject.Inject
-
 
 class BoardRepo @Inject constructor() {
 
-    val observableData: BehaviorSubject<BoardList> = BehaviorSubject.create()
+    val boardList: BehaviorSubject<BoardList> = BehaviorSubject.create()
 
     fun loadBoards() {
 
@@ -19,7 +19,7 @@ class BoardRepo @Inject constructor() {
         doc.get().addOnSuccessListener { document ->
             if (document != null) {
                 val tempBoardsList = document.toObject(BoardList::class.java)
-                observableData.onNext(tempBoardsList!!)
+                boardList.onNext(tempBoardsList!!)
             } else {
                 Log.d("KOG", "No such document")
             }
@@ -29,6 +29,6 @@ class BoardRepo @Inject constructor() {
     }
 
     fun clearBoards() {
-        observableData.onNext(BoardList())
+        boardList.onNext(BoardList())
     }
 }

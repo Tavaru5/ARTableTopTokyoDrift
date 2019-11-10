@@ -1,6 +1,5 @@
 package com.tavarus.artabletop.viewModels
 
-import android.os.Bundle
 import androidx.lifecycle.MutableLiveData
 import com.google.firebase.auth.FirebaseAuth
 import com.tavarus.artabletop.models.BoardList
@@ -15,7 +14,7 @@ class HomeViewModel @Inject constructor(val boardRepo: BoardRepo, val navState: 
 
     init {
         boardsList.value = BoardList()
-        boardRepo.observableData.subscribe {boards ->
+        boardRepo.boardList.subscribe { boards ->
             boardsList.value = boards
         }
 
@@ -29,8 +28,8 @@ class HomeViewModel @Inject constructor(val boardRepo: BoardRepo, val navState: 
     }
 
     fun navigateToBoard(id: String) {
-        val args = Bundle()
-        navState.pushToView(NavStateEnum.BOARD, true, args)
+        navState.selectedBoardID = id
+        navState.pushToView(NavStateEnum.BOARD, true)
     }
 
     fun signOut() {

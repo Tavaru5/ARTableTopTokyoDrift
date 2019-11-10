@@ -1,13 +1,14 @@
 package com.tavarus.artabletop.models
 
+import com.tavarus.artabletop.FeatureScope
 import dagger.Module
 import dagger.Provides
-import javax.inject.Singleton
 
+@FeatureScope
 @Module
 object NavigationModule {
 
-    @Singleton
+    @FeatureScope
     @Provides
     fun provideNavigation(): NavState {
         return NavState()
