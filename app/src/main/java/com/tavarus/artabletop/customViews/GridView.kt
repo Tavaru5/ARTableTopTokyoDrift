@@ -1,24 +1,25 @@
 package com.tavarus.artabletop.customViews
 
+import android.animation.ValueAnimator
 import android.content.Context
-import android.graphics.Paint
-import android.util.AttributeSet
-import android.view.View
-import com.tavarus.artabletop.models.Board
 import android.graphics.Canvas
 import android.graphics.Color
+import android.graphics.Paint
 import android.graphics.Path
-import android.util.Log
-import android.view.ViewGroup
-import android.view.ViewGroup.LayoutParams.MATCH_PARENT
+import android.util.AttributeSet
+import android.view.GestureDetector
+import android.view.MotionEvent
+import android.view.ScaleGestureDetector
+import android.view.View
+import android.view.View.OnTouchListener
+import android.view.animation.DecelerateInterpolator
 import androidx.core.content.ContextCompat
 import com.tavarus.artabletop.R
 import com.tavarus.artabletop.models.MaterialEnum
 import com.tavarus.artabletop.models.NewBoard
-import java.lang.Float.min
-import android.icu.lang.UCharacter.GraphemeClusterBreak.T
-
-
+import kotlin.math.abs
+import kotlin.math.max
+import kotlin.math.min
 
 
 class GridView @JvmOverloads constructor(
@@ -35,9 +36,109 @@ class GridView @JvmOverloads constructor(
         calculateDimensions()
     }
 
-    var heightMargin = 60.0f
-    var widthMargin = 60.0f
     var size = 0.0f
+
+    var mOffsetX = 0.0f
+    var mOffsetY = 0.0f
+
+    var scaling = false
+
+    private val mGestureListener = object : GestureDetector.SimpleOnGestureListener() {
+
+        override fun onDown(e: MotionEvent?): Boolean {
+            return true
+        }
+
+        override fun onScroll(
+            e1: MotionEvent,
+            e2: MotionEvent,
+            distanceX: Float,
+            distanceY: Float
+        ): Boolean {
+            if (!scaling) {
+                mOffsetX = checkBound(mOffsetX - distanceX)
+                mOffsetY = checkBound(mOffsetY - distanceY)
+                invalidate()
+            }
+            return true
+        }
+
+        override fun onFling(
+            e1: MotionEvent?,
+            e2: MotionEvent?,
+            velocityX: Float,
+            velocityY: Float
+        ): Boolean {
+
+            val scaledVX = velocityX /2000
+            val scaledVY = velocityY / 2000
+            val time = (max(abs(velocityX), abs(velocityY))/5).toLong()
+            val distanceX = scaledVX * time
+            val distanceY = scaledVY * time
+
+            val animatorX = ValueAnimator.ofFloat(mOffsetX, mOffsetX + distanceX)
+            animatorX.duration = time
+            animatorX.interpolator = DecelerateInterpolator()
+            animatorX.addUpdateListener {
+                val animatedValue = it.animatedValue as Float
+                mOffsetX = checkBound(animatedValue)
+                if (mOffsetX != animatedValue) {
+                    it.cancel()
+                }
+                invalidate()
+            }
+
+            val animatorY = ValueAnimator.ofFloat(mOffsetY, mOffsetY + distanceY)
+            animatorY.duration = time
+            animatorY.interpolator = DecelerateInterpolator()
+            animatorY.addUpdateListener {
+                val animatedValue = it.animatedValue as Float
+                mOffsetY = checkBound(animatedValue)
+                if (mOffsetY != animatedValue) {
+                    it.cancel()
+                }
+                invalidate()
+            }
+
+            animatorY.start()
+            animatorX.start()
+
+            return true
+        }
+    }
+
+    private val scaleListener = object : ScaleGestureDetector.SimpleOnScaleGestureListener() {
+
+        override fun onScaleBegin(detector: ScaleGestureDetector?): Boolean {
+            scaling = true
+            return true
+        }
+
+        override fun onScaleEnd(detector: ScaleGestureDetector?) {
+            scaling = false
+            return super.onScaleEnd(detector)
+        }
+
+        override fun onScale(detector: ScaleGestureDetector): Boolean {
+
+            val futureSize = size*detector.scaleFactor
+
+            size = max(min(futureSize, min(width, height).toFloat()), min(width/10, height/10).toFloat())
+            invalidate()
+
+            return true
+        }
+    }
+
+    private val mScaleDetector = ScaleGestureDetector(context, scaleListener)
+
+    private val mGestureDetector = GestureDetector(context, mGestureListener)
+
+    private val mOnTouchListener = OnTouchListener { view, ev ->
+        mScaleDetector.onTouchEvent(ev)
+        mGestureDetector.onTouchEvent(ev)
+    }
+
 
     init {
         setWillNotDraw(false)
@@ -49,12 +150,21 @@ class GridView @JvmOverloads constructor(
         whitePaint.color = Color.WHITE
         guidePaint.strokeWidth = 2.0f
         guidePaint.color = ContextCompat.getColor(context, R.color.colorGuideLine)
+        setOnTouchListener(mOnTouchListener)
     }
 
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         super.onSizeChanged(w, h, oldw, oldh)
         calculateDimensions()
+    }
+
+    fun checkBound(offset: Float): Float {
+        if (abs(offset) > 10 * size) {
+            return if (offset < 0) (-10 * size) else 10 * size
+            //Bounce back
+        }
+        return offset
     }
 
     fun calculateDimensions() {
@@ -64,13 +174,7 @@ class GridView @JvmOverloads constructor(
 
         val cellWidth = (width.toFloat() - 120) / board.width()
         val cellHeight = (height.toFloat() - 120) / board.height()
-        if (cellWidth < cellHeight) {
-            size = cellWidth
-            heightMargin = (height.toFloat() - width.toFloat()) / 2 + 60
-        } else {
-            size = cellHeight
-            widthMargin = (width.toFloat() - height.toFloat()) / 2 + 60
-        }
+        size = if (cellWidth < cellHeight) cellWidth else cellHeight
 
         invalidate()
     }
@@ -111,38 +215,42 @@ class GridView @JvmOverloads constructor(
             return
         }
 
-        val offset = size/4
+        val gridSpace = size / 4
 
-        var heightRemainder = height.rem(size)/2
+        var heightRemainder = (height % size) / 2
         if (height > width) {
-            heightRemainder += size/2
+            heightRemainder += size / 2
         }
-        for (i in -1..(height/size).toInt()) {
-            val horizontal = (i * size) + heightRemainder
-            canvas.drawLine(0.0f, horizontal, width.toFloat(), horizontal, whitePaint)
-            canvas.drawLine(0.0f, horizontal + offset, width.toFloat(), horizontal + offset, guidePaint)
-            canvas.drawLine(0.0f, horizontal + 2 * offset, width.toFloat(), horizontal + 2 * offset, guidePaint)
-            canvas.drawLine(0.0f, horizontal + 3 * offset, width.toFloat(), horizontal + 3 * offset, guidePaint)
+        for (i in -4..(height / gridSpace).toInt()) {
+            val horizontal = (i * gridSpace) + heightRemainder + mOffsetY % (size)
+            // adding 0.1 and checking < 1 for imprecisions
+            val thickLine = (abs(horizontal - mOffsetY - height/2) + 0.1) % size < 1
+            val paint = if (thickLine) whitePaint else guidePaint
+            canvas.drawLine(0.0f, horizontal, width.toFloat(), horizontal, paint)
 
         }
 
-        val widthRemainder = width.rem(size)/2
-        for (i in -1..(width/size).toInt()) {
-            val vertical = (i * size) + widthRemainder
-            canvas.drawLine(vertical, 0.0f, vertical, height.toFloat(), whitePaint)
-            canvas.drawLine(vertical + offset, 0.0f, vertical + offset, height.toFloat(), guidePaint)
-            canvas.drawLine(vertical + 2 * offset, 0.0f, vertical + 2 * offset, height.toFloat(), guidePaint)
-            canvas.drawLine(vertical + 3 * offset, 0.0f, vertical + 3 * offset, height.toFloat(), guidePaint)
+        val widthRemainder = (width % size) / 2
+        for (i in -4..(width / gridSpace).toInt()) {
+            val vertical = (i * gridSpace) + widthRemainder + mOffsetX % (size)
+            // adding 0.1 and checking < 1 for imprecisions
+            val thickLine = (abs(vertical - mOffsetX - width/2) + 0.1) % size < 1
+            val paint = if (thickLine) whitePaint else guidePaint
+
+            canvas.drawLine(vertical, 0.0f, vertical, height.toFloat(), paint)
         }
 
-        val rectOffset = offset + 5
-        val rhombOffset = offset - 10
-        board.tiles.forEachIndexed { heightIndex, list ->
-            list.forEachIndexed { widthIndex, tile ->
-                val top = heightIndex * size + heightMargin + 10
-                val left = widthIndex * size + widthMargin + 10
-                val right = (widthIndex + 1) * size + widthMargin - 10
-                val bottom = (heightIndex + 1) * size + heightMargin - 10
+        val rectOffset = gridSpace + 5
+        val rhombOffset = gridSpace - 10
+
+        board.tiles.forEachIndexed { hi, list ->
+            val heightIndex = hi - board.tiles.size/2
+            list.forEachIndexed { wi, tile ->
+                val widthIndex = wi - list.size/2
+                val top = heightIndex * size + 10 + mOffsetY + height/2
+                val left = widthIndex * size + 10 + mOffsetX + width/2
+                val right = (widthIndex + 1) * size - 10 + mOffsetX + width/2
+                val bottom = (heightIndex + 1) * size - 10 + mOffsetY + height/2
                 val leftRhomb = drawVerticalRhomb(left, 0.0f, left + rhombOffset, rhombOffset, top + 10, bottom - 10)
                 val rightRhomb = drawVerticalRhomb(right - rhombOffset, rhombOffset, right, 0.0f, top + 10, bottom - 10)
                 val topRhomb = drawHorizontalRhomb(top, 0.0f, top + rhombOffset, rhombOffset, left + 10, right - 10)
