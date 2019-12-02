@@ -43,6 +43,9 @@ class GridView @JvmOverloads constructor(
 
     var scaling = false
 
+    var flingAnimatorX: ValueAnimator? = null
+    var flingAnimatorY: ValueAnimator? = null
+
     private val mGestureListener = object : GestureDetector.SimpleOnGestureListener() {
 
         override fun onDown(e: MotionEvent?): Boolean {
@@ -56,6 +59,8 @@ class GridView @JvmOverloads constructor(
             distanceY: Float
         ): Boolean {
             if (!scaling) {
+                flingAnimatorX?.cancel()
+                flingAnimatorY?.cancel()
                 mOffsetX = checkBound(mOffsetX - distanceX)
                 mOffsetY = checkBound(mOffsetY - distanceY)
                 invalidate()
@@ -69,6 +74,8 @@ class GridView @JvmOverloads constructor(
             velocityX: Float,
             velocityY: Float
         ): Boolean {
+            flingAnimatorX?.cancel()
+            flingAnimatorY?.cancel()
 
             val scaledVX = velocityX /2000
             val scaledVY = velocityY / 2000
@@ -76,10 +83,10 @@ class GridView @JvmOverloads constructor(
             val distanceX = scaledVX * time
             val distanceY = scaledVY * time
 
-            val animatorX = ValueAnimator.ofFloat(mOffsetX, mOffsetX + distanceX)
-            animatorX.duration = time
-            animatorX.interpolator = DecelerateInterpolator()
-            animatorX.addUpdateListener {
+            flingAnimatorX = ValueAnimator.ofFloat(mOffsetX, mOffsetX + distanceX)
+            flingAnimatorX?.duration = time
+            flingAnimatorX?.interpolator = DecelerateInterpolator()
+            flingAnimatorX?.addUpdateListener {
                 val animatedValue = it.animatedValue as Float
                 mOffsetX = checkBound(animatedValue)
                 if (mOffsetX != animatedValue) {
@@ -88,10 +95,10 @@ class GridView @JvmOverloads constructor(
                 invalidate()
             }
 
-            val animatorY = ValueAnimator.ofFloat(mOffsetY, mOffsetY + distanceY)
-            animatorY.duration = time
-            animatorY.interpolator = DecelerateInterpolator()
-            animatorY.addUpdateListener {
+            flingAnimatorY = ValueAnimator.ofFloat(mOffsetY, mOffsetY + distanceY)
+            flingAnimatorY?.duration = time
+            flingAnimatorY?.interpolator = DecelerateInterpolator()
+            flingAnimatorY?.addUpdateListener {
                 val animatedValue = it.animatedValue as Float
                 mOffsetY = checkBound(animatedValue)
                 if (mOffsetY != animatedValue) {
@@ -100,8 +107,8 @@ class GridView @JvmOverloads constructor(
                 invalidate()
             }
 
-            animatorY.start()
-            animatorX.start()
+            flingAnimatorY?.start()
+            flingAnimatorX?.start()
 
             return true
         }
@@ -221,7 +228,7 @@ class GridView @JvmOverloads constructor(
         if (height > width) {
             heightRemainder += size / 2
         }
-        for (i in -4..(height / gridSpace).toInt()) {
+        for (i in -4..(height / gridSpace).toInt() + 4) {
             val horizontal = (i * gridSpace) + heightRemainder + mOffsetY % (size)
             // adding 0.1 and checking < 1 for imprecisions
             val thickLine = (abs(horizontal - mOffsetY - height/2) + 0.1) % size < 1
@@ -231,7 +238,7 @@ class GridView @JvmOverloads constructor(
         }
 
         val widthRemainder = (width % size) / 2
-        for (i in -4..(width / gridSpace).toInt()) {
+        for (i in -4..(width / gridSpace).toInt() + 4) {
             val vertical = (i * gridSpace) + widthRemainder + mOffsetX % (size)
             // adding 0.1 and checking < 1 for imprecisions
             val thickLine = (abs(vertical - mOffsetX - width/2) + 0.1) % size < 1
