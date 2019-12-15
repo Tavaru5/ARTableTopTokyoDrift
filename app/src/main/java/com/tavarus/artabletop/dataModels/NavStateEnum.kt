@@ -1,4 +1,4 @@
-package com.tavarus.artabletop.models
+package com.tavarus.artabletop.dataModels
 
 enum class NavStateEnum {
     BOARD, HOME, LOGIN, EDITOR

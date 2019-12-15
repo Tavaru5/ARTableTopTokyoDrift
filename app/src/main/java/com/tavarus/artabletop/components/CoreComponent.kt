@@ -1,4 +1,4 @@
-package com.tavarus.artabletop
+package com.tavarus.artabletop.components
 
 import android.content.Context
 import com.tavarus.artabletop.modules.CoreAppModule

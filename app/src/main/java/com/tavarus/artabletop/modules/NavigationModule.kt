@@ -1,6 +1,7 @@
-package com.tavarus.artabletop.models
+package com.tavarus.artabletop.modules
 
-import com.tavarus.artabletop.FeatureScope
+import com.tavarus.artabletop.daggerScopes.FeatureScope
+import com.tavarus.artabletop.models.NavState
 import dagger.Module
 import dagger.Provides
 

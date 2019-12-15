@@ -11,9 +11,9 @@ import com.tavarus.artabletop.fragments.BoardFragment
 import com.tavarus.artabletop.fragments.EditorFragment
 import com.tavarus.artabletop.fragments.HomeFragment
 import com.tavarus.artabletop.fragments.LoginFragment
-import com.tavarus.artabletop.models.NavActionEnum
+import com.tavarus.artabletop.dataModels.NavActionEnum
 import com.tavarus.artabletop.models.NavState
-import com.tavarus.artabletop.models.NavStateEnum
+import com.tavarus.artabletop.dataModels.NavStateEnum
 import javax.inject.Inject
 
 

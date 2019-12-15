@@ -2,10 +2,10 @@ package com.tavarus.artabletop.viewModels
 
 import androidx.lifecycle.MutableLiveData
 import com.google.firebase.auth.FirebaseAuth
-import com.tavarus.artabletop.models.BoardList
+import com.tavarus.artabletop.dataModels.BoardList
 import com.tavarus.artabletop.models.BoardRepo
 import com.tavarus.artabletop.models.NavState
-import com.tavarus.artabletop.models.NavStateEnum
+import com.tavarus.artabletop.dataModels.NavStateEnum
 import javax.inject.Inject
 
 class HomeViewModel @Inject constructor(val boardRepo: BoardRepo, val navState: NavState) {

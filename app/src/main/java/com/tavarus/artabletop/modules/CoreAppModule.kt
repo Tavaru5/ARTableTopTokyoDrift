@@ -1,6 +1,6 @@
 package com.tavarus.artabletop.modules
 
-import com.tavarus.artabletop.ComponentManager
+import com.tavarus.artabletop.components.ComponentManager
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton

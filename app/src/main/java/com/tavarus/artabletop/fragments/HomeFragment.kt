@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.tavarus.artabletop.App
 import com.tavarus.artabletop.R
 import com.tavarus.artabletop.adapters.BoardListAdapter
-import com.tavarus.artabletop.models.BoardList
+import com.tavarus.artabletop.dataModels.BoardList
 import com.tavarus.artabletop.viewModels.HomeViewModel
 import kotlinx.android.synthetic.main.home_fragment.*
 import javax.inject.Inject

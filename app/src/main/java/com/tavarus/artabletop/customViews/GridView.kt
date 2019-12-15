@@ -7,6 +7,7 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Path
 import android.util.AttributeSet
+import android.util.Log
 import android.view.GestureDetector
 import android.view.MotionEvent
 import android.view.ScaleGestureDetector
@@ -15,8 +16,8 @@ import android.view.View.OnTouchListener
 import android.view.animation.DecelerateInterpolator
 import androidx.core.content.ContextCompat
 import com.tavarus.artabletop.R
-import com.tavarus.artabletop.models.MaterialEnum
-import com.tavarus.artabletop.models.NewBoard
+import com.tavarus.artabletop.dataModels.MaterialEnum
+import com.tavarus.artabletop.dataModels.NewBoard
 import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
@@ -65,6 +66,10 @@ class GridView @JvmOverloads constructor(
                 mOffsetY = checkBound(mOffsetY - distanceY)
                 invalidate()
             }
+            return true
+        }
+
+        override fun onSingleTapUp(e: MotionEvent?): Boolean {
             return true
         }
 
@@ -169,7 +174,7 @@ class GridView @JvmOverloads constructor(
     fun checkBound(offset: Float): Float {
         if (abs(offset) > 10 * size) {
             return if (offset < 0) (-10 * size) else 10 * size
-            //Bounce back
+            //TODO: Bounce back
         }
         return offset
     }
@@ -179,9 +184,16 @@ class GridView @JvmOverloads constructor(
             return
         }
 
-        val cellWidth = (width.toFloat() - 120) / board.width()
-        val cellHeight = (height.toFloat() - 120) / board.height()
+        val cellWidth = (width.toFloat() - 120) / 4
+        val cellHeight = (height.toFloat() - 120) / 4
         size = if (cellWidth < cellHeight) cellWidth else cellHeight
+
+        if (board.width() % 2 == 1) {
+            mOffsetX -= size/2
+        }
+        if (board.height() % 2 == 1) {
+            mOffsetY -= size/2
+        }
 
         invalidate()
     }
@@ -218,10 +230,6 @@ class GridView @JvmOverloads constructor(
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
 
-        if (board.width() < 1 || board.height() < 1) {
-            return
-        }
-
         val gridSpace = size / 4
 
         var heightRemainder = (height % size) / 2
@@ -249,6 +257,10 @@ class GridView @JvmOverloads constructor(
 
         val rectOffset = gridSpace + 5
         val rhombOffset = gridSpace - 10
+
+        if (board.width() < 1 || board.height() < 1) {
+            return
+        }
 
         board.tiles.forEachIndexed { hi, list ->
             val heightIndex = hi - board.tiles.size/2

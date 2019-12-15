@@ -1,9 +1,10 @@
-package com.tavarus.artabletop
+package com.tavarus.artabletop.components
 
+import com.tavarus.artabletop.daggerScopes.BoardScope
 import com.tavarus.artabletop.fragments.BoardFragment
 import com.tavarus.artabletop.fragments.EditorFragment
 import com.tavarus.artabletop.fragments.HomeFragment
-import com.tavarus.artabletop.models.BoardRepoModule
+import com.tavarus.artabletop.modules.BoardRepoModule
 import dagger.Subcomponent
 
 @BoardScope

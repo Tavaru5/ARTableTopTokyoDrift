@@ -1,7 +1,7 @@
 package com.tavarus.artabletop.viewModels
 
 import androidx.lifecycle.MutableLiveData
-import com.tavarus.artabletop.models.Board
+import com.tavarus.artabletop.dataModels.Board
 import com.tavarus.artabletop.models.BoardRepo
 import com.tavarus.artabletop.models.NavState
 import javax.inject.Inject

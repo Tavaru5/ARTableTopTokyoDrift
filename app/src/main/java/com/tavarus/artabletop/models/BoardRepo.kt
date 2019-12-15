@@ -3,8 +3,8 @@ package com.tavarus.artabletop.models
 import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.tavarus.artabletop.dataModels.BoardList
 import io.reactivex.subjects.BehaviorSubject
-import java.util.*
 import javax.inject.Inject
 
 class BoardRepo @Inject constructor() {

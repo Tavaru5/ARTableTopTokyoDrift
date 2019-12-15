@@ -1,4 +1,4 @@
-package com.tavarus.artabletop.models
+package com.tavarus.artabletop.dataModels
 
 data class NewBoard(
     var tiles: List<List<Tile>> = listOf(listOf()),

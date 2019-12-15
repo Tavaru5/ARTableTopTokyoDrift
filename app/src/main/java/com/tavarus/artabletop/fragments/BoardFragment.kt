@@ -16,7 +16,7 @@ import com.google.ar.sceneform.rendering.ModelRenderable
 import com.google.ar.sceneform.rendering.ShapeFactory
 import com.google.ar.sceneform.ux.ArFragment
 import com.tavarus.artabletop.App
-import com.tavarus.artabletop.models.Board
+import com.tavarus.artabletop.dataModels.Board
 import com.tavarus.artabletop.viewModels.BoardViewModel
 import javax.inject.Inject
 

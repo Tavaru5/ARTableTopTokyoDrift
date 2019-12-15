@@ -2,7 +2,8 @@ package com.tavarus.artabletop.models
 
 import android.os.Bundle
 import androidx.lifecycle.MutableLiveData
-import java.util.*
+import com.tavarus.artabletop.dataModels.NavActionEnum
+import com.tavarus.artabletop.dataModels.NavStateEnum
 import javax.inject.Inject
 
 class NavState @Inject constructor() {
