@@ -14,18 +14,20 @@ import android.view.ScaleGestureDetector
 import android.view.View
 import android.view.View.OnTouchListener
 import android.view.animation.DecelerateInterpolator
+import android.widget.RelativeLayout
 import androidx.core.content.ContextCompat
 import com.tavarus.artabletop.R
 import com.tavarus.artabletop.dataModels.MaterialEnum
 import com.tavarus.artabletop.dataModels.NewBoard
 import kotlin.math.abs
+import kotlin.math.ceil
 import kotlin.math.max
 import kotlin.math.min
 
 
 class GridView @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
-) : View(context, attrs, defStyleAttr) {
+) : RelativeLayout(context, attrs, defStyleAttr) {
     var stonePaint = Paint()
     var nonePaint = Paint()
     var whitePaint = Paint()
@@ -34,6 +36,7 @@ class GridView @JvmOverloads constructor(
     var board: NewBoard = NewBoard()
     set(value) {
         field = value
+        createTileViews()
         calculateDimensions()
     }
 
@@ -42,10 +45,16 @@ class GridView @JvmOverloads constructor(
     var mOffsetX = 0.0f
     var mOffsetY = 0.0f
 
+    var firstDraw = true
+
     var scaling = false
 
     var flingAnimatorX: ValueAnimator? = null
     var flingAnimatorY: ValueAnimator? = null
+
+    var numOfViews = 0
+
+    val tiles: MutableList<MutableList<TileView>> = mutableListOf()
 
     private val mGestureListener = object : GestureDetector.SimpleOnGestureListener() {
 
@@ -64,7 +73,7 @@ class GridView @JvmOverloads constructor(
                 flingAnimatorY?.cancel()
                 mOffsetX = checkBound(mOffsetX - distanceX)
                 mOffsetY = checkBound(mOffsetY - distanceY)
-                invalidate()
+                redraw()
             }
             return true
         }
@@ -97,7 +106,7 @@ class GridView @JvmOverloads constructor(
                 if (mOffsetX != animatedValue) {
                     it.cancel()
                 }
-                invalidate()
+                redraw()
             }
 
             flingAnimatorY = ValueAnimator.ofFloat(mOffsetY, mOffsetY + distanceY)
@@ -109,7 +118,7 @@ class GridView @JvmOverloads constructor(
                 if (mOffsetY != animatedValue) {
                     it.cancel()
                 }
-                invalidate()
+                redraw()
             }
 
             flingAnimatorY?.start()
@@ -136,7 +145,10 @@ class GridView @JvmOverloads constructor(
             val futureSize = size*detector.scaleFactor
 
             size = max(min(futureSize, min(width, height).toFloat()), min(width/10, height/10).toFloat())
-            invalidate()
+
+            calculateViews()
+
+            redraw()
 
             return true
         }
@@ -151,6 +163,10 @@ class GridView @JvmOverloads constructor(
         mGestureDetector.onTouchEvent(ev)
     }
 
+    private fun redraw() {
+        updateTileViews()
+        invalidate()
+    }
 
     init {
         setWillNotDraw(false)
@@ -172,11 +188,46 @@ class GridView @JvmOverloads constructor(
     }
 
     fun checkBound(offset: Float): Float {
+        //Currently 10 (or rather 20), is max size; we should move that value out to the editor
         if (abs(offset) > 10 * size) {
             return if (offset < 0) (-10 * size) else 10 * size
-            //TODO: Bounce back
+            //TODO: Over stretch & Bounce back
         }
         return offset
+    }
+
+    fun createTileViews() {
+        tiles.clear()
+        for (floor in board.tiles) {
+            //TODO: Add multi-floor functionality
+            for (row in floor) {
+                val tempRow = mutableListOf<TileView>()
+                for (tile in row) {
+                    val tileView = TileView(context)
+                    tileView.tile = tile
+                    addView(tileView)
+                    tempRow.add(tileView)
+                }
+                tiles.add(tempRow)
+            }
+        }
+    }
+
+    fun updateTileViews() {
+        tiles.forEachIndexed {hi, row ->
+            val heightIndex = hi - tiles.size/2
+            row.forEachIndexed {wi, tileView ->
+                val widthIndex = wi - row.size/2
+                val centery = heightIndex * size + mOffsetY + height/2
+                val centerx = widthIndex * size + mOffsetX + width/2
+                val params = LayoutParams(size.toInt(), size.toInt())
+                params.addRule(ALIGN_PARENT_LEFT, TRUE)
+                params.addRule(ALIGN_PARENT_TOP, TRUE)
+                params.leftMargin = centerx.toInt()
+                params.topMargin = centery.toInt()
+                tileView.layoutParams = params
+            }
+        }
     }
 
     fun calculateDimensions() {
@@ -195,36 +246,15 @@ class GridView @JvmOverloads constructor(
             mOffsetY -= size/2
         }
 
-        invalidate()
+        calculateViews()
+
+        redraw()
     }
 
-    fun selectPaint(material: MaterialEnum): Paint {
-        return when(material) {
-            MaterialEnum.STONE -> stonePaint
-            MaterialEnum.NONE -> nonePaint
-        }
-    }
-
-    fun drawVerticalRhomb(left: Float, leftOffset: Float, right: Float, rightOffset: Float, top: Float, bottom: Float) : Path {
-        val path = Path()
-        path.moveTo(left, top + leftOffset)
-        path.lineTo(right, top + rightOffset)
-        path.lineTo(right, bottom - rightOffset)
-        path.lineTo(left, bottom - leftOffset)
-        path.lineTo(left, top + leftOffset)
-        path.close()
-        return path
-    }
-
-    fun drawHorizontalRhomb(top: Float, topOffset: Float, bottom: Float, bottomOffset: Float, left: Float, right: Float) : Path {
-        val path = Path()
-        path.moveTo(left + topOffset, top)
-        path.lineTo(right - topOffset, top)
-        path.lineTo(right - bottomOffset, bottom)
-        path.lineTo(left + bottomOffset, bottom)
-        path.lineTo(left + topOffset, top)
-        path.close()
-        return path
+    fun calculateViews() {
+        val totalTiles = board.height() * board.width()
+        val visibleTiles = ((ceil(width / size) + 1) * (ceil(height / size) + 1)).toInt()
+        numOfViews = min(totalTiles, visibleTiles)
     }
 
     override fun onDraw(canvas: Canvas) {
@@ -232,10 +262,17 @@ class GridView @JvmOverloads constructor(
 
         val gridSpace = size / 4
 
+        if (firstDraw) {
+            firstDraw = false
+            redraw()
+        }
+
         var heightRemainder = (height % size) / 2
         if (height > width) {
             heightRemainder += size / 2
         }
+
+        //Drawing the guidelines
         for (i in -4..(height / gridSpace).toInt() + 4) {
             val horizontal = (i * gridSpace) + heightRemainder + mOffsetY % (size)
             // adding 0.1 and checking < 1 for imprecisions
@@ -255,35 +292,6 @@ class GridView @JvmOverloads constructor(
             canvas.drawLine(vertical, 0.0f, vertical, height.toFloat(), paint)
         }
 
-        val rectOffset = gridSpace + 5
-        val rhombOffset = gridSpace - 10
-
-        if (board.width() < 1 || board.height() < 1) {
-            return
-        }
-
-        board.tiles.forEachIndexed { hi, list ->
-            val heightIndex = hi - board.tiles.size/2
-            list.forEachIndexed { wi, tile ->
-                val widthIndex = wi - list.size/2
-                val top = heightIndex * size + 10 + mOffsetY + height/2
-                val left = widthIndex * size + 10 + mOffsetX + width/2
-                val right = (widthIndex + 1) * size - 10 + mOffsetX + width/2
-                val bottom = (heightIndex + 1) * size - 10 + mOffsetY + height/2
-                val leftRhomb = drawVerticalRhomb(left, 0.0f, left + rhombOffset, rhombOffset, top + 10, bottom - 10)
-                val rightRhomb = drawVerticalRhomb(right - rhombOffset, rhombOffset, right, 0.0f, top + 10, bottom - 10)
-                val topRhomb = drawHorizontalRhomb(top, 0.0f, top + rhombOffset, rhombOffset, left + 10, right - 10)
-                val bottomRhomb = drawHorizontalRhomb(bottom - rhombOffset, rhombOffset, bottom, 0.0f, left + 10, right - 10)
-
-                canvas.drawPath(leftRhomb, selectPaint(tile.leftWall))
-                canvas.drawPath(rightRhomb, selectPaint(tile.rightWall))
-                canvas.drawPath(topRhomb, selectPaint(tile.topWall))
-                canvas.drawPath(bottomRhomb, selectPaint(tile.bottomWall))
-
-                canvas.drawRect(left + rectOffset, top + rectOffset, right - rectOffset, bottom - rectOffset, selectPaint(tile.material))
-
-            }
-        }
-
     }
+
 }

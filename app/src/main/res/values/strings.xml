@@ -8,4 +8,8 @@
     <string name="password">Password</string>
     <string name="email">Email</string>
     <string name="add_board">Add board</string>
+    <string name="width">Width</string>
+    <string name="height">Height</string>
+    <string name="create">CREATE</string>
+    <string name="cancel">CANCEL</string>
 </resources>

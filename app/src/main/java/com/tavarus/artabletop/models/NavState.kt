@@ -1,6 +1,5 @@
 package com.tavarus.artabletop.models
 
-import android.os.Bundle
 import androidx.lifecycle.MutableLiveData
 import com.tavarus.artabletop.dataModels.NavActionEnum
 import com.tavarus.artabletop.dataModels.NavStateEnum
@@ -8,7 +7,6 @@ import javax.inject.Inject
 
 class NavState @Inject constructor() {
     var currentScreen: NavStateEnum = NavStateEnum.HOME
-    var screenArgs: Bundle = Bundle.EMPTY
     var action: MutableLiveData<NavActionEnum> = MutableLiveData()
     var allowBackNav = true
     var selectedBoardID = ""
@@ -17,9 +15,8 @@ class NavState @Inject constructor() {
         action.value = NavActionEnum.PUSH
     }
 
-    fun pushToView(screen: NavStateEnum, allowBack: Boolean = true, args: Bundle = Bundle.EMPTY) {
+    fun pushToView(screen: NavStateEnum, allowBack: Boolean = true) {
         currentScreen = screen
-        screenArgs = args
         action.value = NavActionEnum.PUSH
         allowBackNav = allowBack
     }
