@@ -77,7 +77,10 @@ class HomeFragment : Fragment() {
         widthPicker.minValue = 0
         val createButton = dialog.findViewById(R.id.createButton) as Button
         val cancelButton = dialog.findViewById(R.id.cancelButton) as Button
-        createButton.setOnClickListener { viewModel.goToAddBoard(widthPicker.value, heightPicker.value) }
+        createButton.setOnClickListener {
+            viewModel.goToAddBoard(widthPicker.value, heightPicker.value)
+            dialog.dismiss()
+        }
         cancelButton.setOnClickListener { dialog.dismiss() }
         dialog.show()
     }

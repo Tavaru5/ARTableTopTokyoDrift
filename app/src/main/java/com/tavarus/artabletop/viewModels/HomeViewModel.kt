@@ -40,7 +40,7 @@ class HomeViewModel @Inject constructor(val boardRepo: BoardRepo, val navState: 
     fun goToAddBoard(width: Int, height: Int) {
         // Add board
         // Update selected board ID to that new board
-        navState.pushToView(NavStateEnum.EDITOR)
+        navState.pushToView(NavStateEnum.EDITOR, true, mapOf("width" to width, "height" to height))
     }
 
 }

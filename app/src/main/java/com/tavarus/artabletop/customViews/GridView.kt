@@ -224,6 +224,8 @@ class GridView @JvmOverloads constructor(
                 params.addRule(ALIGN_PARENT_LEFT, TRUE)
                 params.addRule(ALIGN_PARENT_TOP, TRUE)
                 params.leftMargin = centerx.toInt()
+                params.rightMargin = (width - centerx + size).toInt()
+                params.bottomMargin = (height - centery + size).toInt()
                 params.topMargin = centery.toInt()
                 tileView.layoutParams = params
             }

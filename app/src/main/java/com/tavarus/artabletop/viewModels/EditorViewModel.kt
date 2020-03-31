@@ -13,6 +13,8 @@ class EditorViewModel @Inject constructor(val boardRepo: BoardRepo, val navState
 
     init {
         val tempBoard = NewBoard()
+        val width = (navState.screenParams["width"] ?: 4) as Int
+        val height = (navState.screenParams["height"] ?: 4) as Int
         val emptyTile = Tile(
             MaterialEnum.NONE,
             MaterialEnum.NONE,
@@ -20,8 +22,8 @@ class EditorViewModel @Inject constructor(val boardRepo: BoardRepo, val navState
             MaterialEnum.NONE,
             MaterialEnum.NONE
         )
-        val emptyRow = listOf(emptyTile,  emptyTile, emptyTile)
-        tempBoard.tiles = listOf(listOf(emptyRow, emptyRow, emptyRow, emptyRow))
+        val row = List(width) {emptyTile}
+        tempBoard.tiles = listOf(List(height) {row})
         board.value = tempBoard
     }
 

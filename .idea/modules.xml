@@ -2,8 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/ARTableTopTokyoDrift.iml" filepath="$PROJECT_DIR$/ARTableTopTokyoDrift.iml" group="ARTableTopTokyoDrift" />
       <module fileurl="file://$PROJECT_DIR$/TokyoDrifter.iml" filepath="$PROJECT_DIR$/TokyoDrifter.iml" />
-      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" group="ARTableTopTokyoDrift/app" />
     </modules>
   </component>
 </project>

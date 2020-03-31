@@ -10,15 +10,19 @@ class NavState @Inject constructor() {
     var action: MutableLiveData<NavActionEnum> = MutableLiveData()
     var allowBackNav = true
     var selectedBoardID = ""
+    var screenParams = mapOf<String, Any>()
 
     init {
         action.value = NavActionEnum.PUSH
     }
 
-    fun pushToView(screen: NavStateEnum, allowBack: Boolean = true) {
+    fun pushToView(screen: NavStateEnum, allowBack: Boolean = true, newParams: Map<String, Any>? = null) {
         currentScreen = screen
         action.value = NavActionEnum.PUSH
         allowBackNav = allowBack
+        if (newParams != null) {
+            screenParams = newParams
+        }
     }
 
     fun goBack() {
