@@ -1,9 +1,15 @@
 package com.tavarus.artabletop.dataModels
 
 data class Tile(
-    val material: MaterialEnum,
-    val leftWall: MaterialEnum,
-    val rightWall: MaterialEnum,
-    val topWall: MaterialEnum,
-    val bottomWall: MaterialEnum
-)
+    var material: MaterialEnum = MaterialEnum.NONE,
+    var leftWall: MaterialEnum = MaterialEnum.NONE,
+    var rightWall: MaterialEnum = MaterialEnum.NONE,
+    var topWall: MaterialEnum = MaterialEnum.NONE,
+    var bottomWall: MaterialEnum = MaterialEnum.NONE,
+) {
+    fun isEmpty() = material == MaterialEnum.NONE &&
+                leftWall == MaterialEnum.NONE &&
+                rightWall == MaterialEnum.NONE &&
+                topWall == MaterialEnum.NONE &&
+                bottomWall == MaterialEnum.NONE
+}

@@ -3,7 +3,9 @@ package com.tavarus.artabletop.models
 import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.tavarus.artabletop.dataModels.BFOList
 import com.tavarus.artabletop.dataModels.BoardList
+import com.tavarus.artabletop.dataModels.toBoardList
 import io.reactivex.subjects.BehaviorSubject
 import javax.inject.Inject
 
@@ -18,8 +20,8 @@ class BoardRepo @Inject constructor() {
             .document(FirebaseAuth.getInstance().currentUser?.uid ?: "")
         doc.get().addOnSuccessListener { document ->
             if (document != null) {
-                val tempBoardsList = document.toObject(BoardList::class.java)
-                boardList.onNext(tempBoardsList!!)
+                val tempBoardsList = document.toObject(BFOList::class.java)
+                boardList.onNext(tempBoardsList!!.toBoardList())
             } else {
                 Log.d("KOG", "No such document")
             }

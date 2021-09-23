@@ -10,18 +10,18 @@ import com.tavarus.artabletop.R
 import com.tavarus.artabletop.dataModels.Board
 import kotlinx.android.synthetic.main.board_list_item.view.*
 
-class BoardListAdapter(var boards: List<Pair<String, Board>>, val context: Context, val onPress: (id: String) -> Unit) : RecyclerView.Adapter<ViewHolder>() {
+class BoardListAdapter(var boards: List<Board>, val context: Context, val onPress: (index: Int) -> Unit) : RecyclerView.Adapter<ViewHolder>() {
     override fun getItemCount(): Int {
         return (boards.size)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.titleTV.text = boards[position].second.title
+        holder.titleTV.text = boards[position].title
         holder.listItemContainer.setOnClickListener {
-            onPress(boards[position].first)
+            onPress(position)
         }
         holder.titleTV.setOnClickListener {
-            onPress(boards[position].first)
+            onPress(position)
         }
     }
 

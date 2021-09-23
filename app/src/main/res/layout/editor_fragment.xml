@@ -4,18 +4,36 @@
         android:id="@+id/editorRoot"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/colorBluePrint"
-        android:clickable="true"
-        >
+        android:background="@color/colorPrimary"
+        android:clickable="true">
 
-    <com.tavarus.artabletop.customViews.GridView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+    <com.tavarus.artabletop.editor.GridView
             android:id="@+id/boardGrid"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toTopOf="@id/bottomSheetViewContainer"
             app:layout_constraintLeft_toLeftOf="parent"
-        />
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    <com.tavarus.artabletop.neumorphism.NeumorphCardView
+            android:id="@+id/bottomSheetViewContainer"
+            android:layout_width="0dp"
+            android:layout_height="128dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/boardGrid"
+            style="@style/Widget.Neumorph.BottomSheetCardView"
+            >
+
+        <com.tavarus.artabletop.editor.bottomSheet.EditorBottomSheetView
+                android:id="@+id/bottomSheetView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:background="@color/colorSecondary" />
+
+    </com.tavarus.artabletop.neumorphism.NeumorphCardView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

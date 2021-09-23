@@ -9,7 +9,7 @@ class NavState @Inject constructor() {
     var currentScreen: NavStateEnum = NavStateEnum.HOME
     var action: MutableLiveData<NavActionEnum> = MutableLiveData()
     var allowBackNav = true
-    var selectedBoardID = ""
+    var selectedBoardIndex = 0
     var screenParams = mapOf<String, Any>()
 
     init {

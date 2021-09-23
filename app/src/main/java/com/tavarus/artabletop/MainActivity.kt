@@ -7,10 +7,10 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.Observer
-import com.tavarus.artabletop.fragments.BoardFragment
-import com.tavarus.artabletop.fragments.EditorFragment
-import com.tavarus.artabletop.fragments.HomeFragment
-import com.tavarus.artabletop.fragments.LoginFragment
+import com.tavarus.artabletop.board.BoardFragment
+import com.tavarus.artabletop.editor.EditorFragment
+import com.tavarus.artabletop.home.HomeFragment
+import com.tavarus.artabletop.login.LoginFragment
 import com.tavarus.artabletop.dataModels.NavActionEnum
 import com.tavarus.artabletop.models.NavState
 import com.tavarus.artabletop.dataModels.NavStateEnum

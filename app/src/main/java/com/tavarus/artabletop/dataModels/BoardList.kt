@@ -1,5 +1,5 @@
 package com.tavarus.artabletop.dataModels
 
 data class BoardList (
-    val boards: Map<String, Board> = hashMapOf()
+    val boards: List<Board> = listOf()
 )

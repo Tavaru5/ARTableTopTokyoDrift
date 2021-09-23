@@ -1,10 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <color name="colorPrimary">#008577</color>
-    <color name="colorPrimaryDark">#00574B</color>
-    <color name="colorAccent">#D81B60</color>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <color name="colorPrimary">#e6e3da</color>
+    <color name="colorSecondary">#dadde6</color>
     <color name="colorBluePrint">#2a66c7</color>
-    <color name="colorStone">#545a63</color>
-    <color name="colorNone">#80000000</color>
+    <color name="colorStone">#818790</color>
+    <color name="colorStoneWall">#545a63</color>
+    <color name="colorWood">#b68b6d</color>
+    <color name="colorWoodWall">#855e42</color>
+    <color name="colorNone">#80888888</color>
+    <color name="transparent">#00FFFFFF</color>
     <color name="colorGuideLine">#80DDDDDD</color>
+    <color name="colorSecondaryNeumorphDark">#b9bcc4</color>
+    <color name="colorSecondaryNeumorphLight">#fbfeff</color>
 </resources>

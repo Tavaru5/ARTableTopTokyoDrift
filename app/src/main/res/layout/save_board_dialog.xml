@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/save_dialog_background"
+        android:minWidth="284dp"
+        android:orientation="vertical">
+
+    <com.tavarus.artabletop.neumorphism.NeumorphCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:neumorph_backgroundColor="@color/colorSecondary"
+            app:neumorph_inset="2dp"
+            app:neumorph_shadowColorDark="@color/colorSecondaryNeumorphDark"
+            app:neumorph_shadowColorLight="@color/colorSecondaryNeumorphLight"
+            app:neumorph_shadowElevation="2dp"
+            app:neumorph_shapeType="pressed">
+
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+            <com.tavarus.artabletop.neumorphism.NeumorphImageButton
+                    android:id="@+id/closeButton"
+                    style="@style/Widget.Neumorph.ImageButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
+                    android:contentDescription="Close"
+                    android:src="@drawable/ic_close"
+                    app:neumorph_inset="6dp"
+                    app:neumorph_shadowColorDark="@color/colorSecondaryNeumorphDark"
+                    app:neumorph_shadowColorLight="@color/colorSecondaryNeumorphLight"
+                    app:neumorph_shadowElevation="2dp" />
+
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginBottom="8dp"
+                    android:text="Enter a title:"
+                    android:textSize="20sp" />
+
+            <com.tavarus.artabletop.neumorphism.NeumorphCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:neumorph_shadowColorDark="@color/colorSecondaryNeumorphDark"
+                    app:neumorph_shadowColorLight="@color/colorSecondaryNeumorphLight"
+                    app:neumorph_shadowElevation="2dp"
+                    app:neumorph_shapeType="basin">
+
+                <EditText
+                        android:id="@+id/titleEditText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginHorizontal="16dp"
+                        android:inputType="text"
+                        android:imeOptions="actionDone"
+                        android:hint="Title" />
+
+            </com.tavarus.artabletop.neumorphism.NeumorphCardView>
+
+            <com.tavarus.artabletop.neumorphism.NeumorphButton
+                    android:id="@+id/saveButton"
+                    style="@style/Widget.Neumorph.Button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
+                    android:layout_marginTop="16dp"
+                    android:paddingHorizontal="36dp"
+                    android:text="Save"
+                    android:textColor="@android:color/black"
+                    android:textSize="16sp"
+                    app:neumorph_shadowColorDark="@color/colorSecondaryNeumorphDark"
+                    app:neumorph_shadowColorLight="@color/colorSecondaryNeumorphLight"
+                    app:neumorph_shadowElevation="2dp" />
+
+        </LinearLayout>
+
+    </com.tavarus.artabletop.neumorphism.NeumorphCardView>
+
+
+</LinearLayout>

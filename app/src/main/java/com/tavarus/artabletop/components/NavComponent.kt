@@ -3,7 +3,7 @@ package com.tavarus.artabletop.components
 import android.content.Context
 import com.tavarus.artabletop.daggerScopes.FeatureScope
 import com.tavarus.artabletop.MainActivity
-import com.tavarus.artabletop.fragments.LoginFragment
+import com.tavarus.artabletop.login.LoginFragment
 import com.tavarus.artabletop.modules.BoardRepoModule
 import com.tavarus.artabletop.modules.NavigationModule
 import dagger.BindsInstance

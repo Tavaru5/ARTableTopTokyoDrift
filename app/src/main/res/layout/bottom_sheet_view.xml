@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        tools:parentTag="LinearLayout">
+
+    <com.tavarus.artabletop.editor.bottomSheet.BottomSheetItemView
+            android:id="@+id/bottomItem0"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+
+    <com.tavarus.artabletop.editor.bottomSheet.BottomSheetItemView
+            android:id="@+id/bottomItem1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+</merge>
